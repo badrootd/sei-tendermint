@@ -11,8 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tendermint/tendermint/libs/log"
-	e2e "github.com/tendermint/tendermint/test/e2e/pkg"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	e2e "github.com/badrootd/sei-tendermint/test/e2e/pkg"
 )
 
 const randomSeed = 2308084734268
@@ -302,7 +302,7 @@ func NewCLI(logger log.Logger) *CLI {
 	Min Block Interval
 	Max Block Interval
 over a 100 block sampling period.
-		
+
 Does not run any perbutations.
 		`,
 		RunE: func(cmd *cobra.Command, args []string) error {

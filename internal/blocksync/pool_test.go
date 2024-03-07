@@ -6,16 +6,16 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/crypto/ed25519"
-	"github.com/tendermint/tendermint/internal/p2p"
+	"github.com/badrootd/sei-tendermint/crypto/ed25519"
+	"github.com/badrootd/sei-tendermint/internal/p2p"
 	dbm "github.com/tendermint/tm-db"
 	"strings"
 	"testing"
 	"time"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func init() {

@@ -8,11 +8,11 @@ import (
 	"io"
 	"sync"
 
-	"github.com/tendermint/tendermint/crypto/merkle"
-	"github.com/tendermint/tendermint/libs/bits"
-	tmbytes "github.com/tendermint/tendermint/libs/bytes"
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/crypto/merkle"
+	"github.com/badrootd/sei-tendermint/libs/bits"
+	tmbytes "github.com/badrootd/sei-tendermint/libs/bytes"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
 )
 
 var (

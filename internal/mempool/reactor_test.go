@@ -13,16 +13,16 @@ import (
 	"github.com/fortytw2/leaktest"
 	"github.com/stretchr/testify/require"
 
-	abciclient "github.com/tendermint/tendermint/abci/client"
-	"github.com/tendermint/tendermint/abci/example/kvstore"
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/internal/p2p"
-	"github.com/tendermint/tendermint/internal/p2p/p2ptest"
-	"github.com/tendermint/tendermint/libs/log"
-	tmrand "github.com/tendermint/tendermint/libs/rand"
-	protomem "github.com/tendermint/tendermint/proto/tendermint/mempool"
-	"github.com/tendermint/tendermint/types"
+	abciclient "github.com/badrootd/sei-tendermint/abci/client"
+	"github.com/badrootd/sei-tendermint/abci/example/kvstore"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/internal/p2p"
+	"github.com/badrootd/sei-tendermint/internal/p2p/p2ptest"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
+	protomem "github.com/badrootd/sei-tendermint/proto/tendermint/mempool"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 type reactorTestSuite struct {

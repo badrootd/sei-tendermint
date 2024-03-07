@@ -14,14 +14,14 @@ import (
 	"github.com/spf13/cobra"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/libs/log"
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	"github.com/tendermint/tendermint/light"
-	lproxy "github.com/tendermint/tendermint/light/proxy"
-	lrpc "github.com/tendermint/tendermint/light/rpc"
-	dbs "github.com/tendermint/tendermint/light/store/db"
-	rpcserver "github.com/tendermint/tendermint/rpc/jsonrpc/server"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	"github.com/badrootd/sei-tendermint/light"
+	lproxy "github.com/badrootd/sei-tendermint/light/proxy"
+	lrpc "github.com/badrootd/sei-tendermint/light/rpc"
+	dbs "github.com/badrootd/sei-tendermint/light/store/db"
+	rpcserver "github.com/badrootd/sei-tendermint/rpc/jsonrpc/server"
 )
 
 // LightCmd constructs the base command called when invoked without any subcommands.

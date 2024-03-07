@@ -5,9 +5,9 @@ import (
 	"io"
 	"sync"
 
-	"github.com/tendermint/tendermint/libs/service"
-	privvalproto "github.com/tendermint/tendermint/proto/tendermint/privval"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/libs/service"
+	privvalproto "github.com/badrootd/sei-tendermint/proto/tendermint/privval"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // ValidationRequestHandlerFunc handles different remoteSigner requests

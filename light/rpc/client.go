@@ -10,16 +10,16 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/crypto/merkle"
-	tmbytes "github.com/tendermint/tendermint/libs/bytes"
-	"github.com/tendermint/tendermint/libs/log"
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	service "github.com/tendermint/tendermint/libs/service"
-	rpcclient "github.com/tendermint/tendermint/rpc/client"
-	"github.com/tendermint/tendermint/rpc/coretypes"
-	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
-	"github.com/tendermint/tendermint/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/crypto/merkle"
+	tmbytes "github.com/badrootd/sei-tendermint/libs/bytes"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	service "github.com/badrootd/sei-tendermint/libs/service"
+	rpcclient "github.com/badrootd/sei-tendermint/rpc/client"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
+	rpctypes "github.com/badrootd/sei-tendermint/rpc/jsonrpc/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // KeyPathFunc builds a merkle path out of the given path and key.

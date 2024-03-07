@@ -11,10 +11,10 @@ import (
 	"sync"
 	"time"
 
-	"github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/libs/log"
-	tmnet "github.com/tendermint/tendermint/libs/net"
-	"github.com/tendermint/tendermint/libs/service"
+	"github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmnet "github.com/badrootd/sei-tendermint/libs/net"
+	"github.com/badrootd/sei-tendermint/libs/service"
 )
 
 // This is goroutine-safe, but users should beware that the application in

@@ -8,15 +8,15 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/log"
 
 	"github.com/fortytw2/leaktest"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/internal/p2p"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/internal/p2p"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // FIXME: We should probably have some randomized property-based tests for the

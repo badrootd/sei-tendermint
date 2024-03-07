@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 
 	"github.com/gogo/protobuf/jsonpb"
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/encoding"
-	"github.com/tendermint/tendermint/internal/jsontypes"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/crypto/encoding"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
 )
 
 const (

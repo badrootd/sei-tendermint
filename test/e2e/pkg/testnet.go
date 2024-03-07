@@ -13,11 +13,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/ed25519"
-	"github.com/tendermint/tendermint/crypto/secp256k1"
-	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/crypto/ed25519"
+	"github.com/badrootd/sei-tendermint/crypto/secp256k1"
+	rpchttp "github.com/badrootd/sei-tendermint/rpc/client/http"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 const (

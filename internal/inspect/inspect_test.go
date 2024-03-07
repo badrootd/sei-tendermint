@@ -15,16 +15,16 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	abcitypes "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/internal/inspect"
-	"github.com/tendermint/tendermint/internal/pubsub/query"
-	"github.com/tendermint/tendermint/internal/state/indexer"
-	indexermocks "github.com/tendermint/tendermint/internal/state/indexer/mocks"
-	statemocks "github.com/tendermint/tendermint/internal/state/mocks"
-	"github.com/tendermint/tendermint/libs/log"
-	httpclient "github.com/tendermint/tendermint/rpc/client/http"
-	"github.com/tendermint/tendermint/types"
+	abcitypes "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/internal/inspect"
+	"github.com/badrootd/sei-tendermint/internal/pubsub/query"
+	"github.com/badrootd/sei-tendermint/internal/state/indexer"
+	indexermocks "github.com/badrootd/sei-tendermint/internal/state/indexer/mocks"
+	statemocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	httpclient "github.com/badrootd/sei-tendermint/rpc/client/http"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func TestInspectConstructor(t *testing.T) {

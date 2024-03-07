@@ -6,14 +6,14 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/crypto"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	"github.com/tendermint/tendermint/libs/log"
-	tmnet "github.com/tendermint/tendermint/libs/net"
-	tmos "github.com/tendermint/tendermint/libs/os"
-	"github.com/tendermint/tendermint/privval"
-	tmgrpc "github.com/tendermint/tendermint/privval/grpc"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/crypto"
+	tmjson "github.com/badrootd/sei-tendermint/libs/json"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmnet "github.com/badrootd/sei-tendermint/libs/net"
+	tmos "github.com/badrootd/sei-tendermint/libs/os"
+	"github.com/badrootd/sei-tendermint/privval"
+	tmgrpc "github.com/badrootd/sei-tendermint/privval/grpc"
 )
 
 // MakeShowValidatorCommand constructs a command to show the validator info.

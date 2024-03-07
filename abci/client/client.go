@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/libs/service"
+	"github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/service"
 )
 
 const (

@@ -1,8 +1,8 @@
 package sr25519
 
 import (
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	tmjson "github.com/tendermint/tendermint/libs/json"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	tmjson "github.com/badrootd/sei-tendermint/libs/json"
 )
 
 const (

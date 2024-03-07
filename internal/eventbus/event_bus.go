@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"strings"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmpubsub "github.com/tendermint/tendermint/internal/pubsub"
-	tmquery "github.com/tendermint/tendermint/internal/pubsub/query"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/libs/service"
-	"github.com/tendermint/tendermint/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
+	tmquery "github.com/badrootd/sei-tendermint/internal/pubsub/query"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/service"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 var DefaultBufferCapacity = 100

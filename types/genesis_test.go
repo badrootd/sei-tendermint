@@ -8,8 +8,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
-	tmtime "github.com/tendermint/tendermint/libs/time"
+	"github.com/badrootd/sei-tendermint/crypto/ed25519"
+	tmtime "github.com/badrootd/sei-tendermint/libs/time"
 )
 
 func TestGenesisBad(t *testing.T) {

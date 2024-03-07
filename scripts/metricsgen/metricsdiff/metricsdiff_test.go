@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	metricsdiff "github.com/tendermint/tendermint/scripts/metricsgen/metricsdiff"
+	metricsdiff "github.com/badrootd/sei-tendermint/scripts/metricsgen/metricsdiff"
 )
 
 func TestDiff(t *testing.T) {

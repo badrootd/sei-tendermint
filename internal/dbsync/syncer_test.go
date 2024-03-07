@@ -7,11 +7,11 @@ import (
 	"time"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/internal/state"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/proto/tendermint/dbsync"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/internal/state"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/proto/tendermint/dbsync"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func getTestSyncer(t *testing.T) *Syncer {

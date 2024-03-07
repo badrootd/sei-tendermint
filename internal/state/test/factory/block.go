@@ -7,9 +7,9 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	sm "github.com/tendermint/tendermint/internal/state"
-	"github.com/tendermint/tendermint/internal/test/factory"
-	"github.com/tendermint/tendermint/types"
+	sm "github.com/badrootd/sei-tendermint/internal/state"
+	"github.com/badrootd/sei-tendermint/internal/test/factory"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func MakeBlocks(ctx context.Context, t *testing.T, n int, state *sm.State, privVal types.PrivValidator) []*types.Block {

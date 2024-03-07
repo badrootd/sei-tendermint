@@ -7,12 +7,12 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/crypto"
-	tmrand "github.com/tendermint/tendermint/libs/rand"
-	"github.com/tendermint/tendermint/privval"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/tendermint/tendermint/rpc/client"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/crypto"
+	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
+	"github.com/badrootd/sei-tendermint/privval"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/rpc/client"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func newEvidence(t *testing.T, val *privval.FilePV,

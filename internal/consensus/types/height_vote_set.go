@@ -7,9 +7,9 @@ import (
 	"strings"
 	"sync"
 
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/tendermint/tendermint/types"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 type RoundVoteSet struct {

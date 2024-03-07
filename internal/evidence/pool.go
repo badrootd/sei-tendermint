@@ -14,12 +14,12 @@ import (
 	"github.com/google/orderedcode"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/internal/eventbus"
-	clist "github.com/tendermint/tendermint/internal/libs/clist"
-	sm "github.com/tendermint/tendermint/internal/state"
-	"github.com/tendermint/tendermint/libs/log"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/internal/eventbus"
+	clist "github.com/badrootd/sei-tendermint/internal/libs/clist"
+	sm "github.com/badrootd/sei-tendermint/internal/state"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // key prefixes

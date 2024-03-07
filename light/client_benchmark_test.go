@@ -8,11 +8,11 @@ import (
 
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/light"
-	"github.com/tendermint/tendermint/light/provider"
-	dbs "github.com/tendermint/tendermint/light/store/db"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/light"
+	"github.com/badrootd/sei-tendermint/light/provider"
+	dbs "github.com/badrootd/sei-tendermint/light/store/db"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // NOTE: block is produced every minute. Make sure the verification time

@@ -9,7 +9,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/log"
 )
 
 func TestConnectionFiltering(t *testing.T) {

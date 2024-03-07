@@ -8,10 +8,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	tmbytes "github.com/tendermint/tendermint/libs/bytes"
-	tmtime "github.com/tendermint/tendermint/libs/time"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	tmbytes "github.com/badrootd/sei-tendermint/libs/bytes"
+	tmtime "github.com/badrootd/sei-tendermint/libs/time"
 )
 
 const (

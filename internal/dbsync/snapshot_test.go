@@ -10,8 +10,8 @@ import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
-	"github.com/tendermint/tendermint/config"
-	dstypes "github.com/tendermint/tendermint/proto/tendermint/dbsync"
+	"github.com/badrootd/sei-tendermint/config"
+	dstypes "github.com/badrootd/sei-tendermint/proto/tendermint/dbsync"
 )
 
 func TestSnapshot(t *testing.T) {

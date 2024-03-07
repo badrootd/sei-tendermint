@@ -9,11 +9,11 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	tmrand "github.com/tendermint/tendermint/libs/rand"
-	"github.com/tendermint/tendermint/rpc/client"
-	"github.com/tendermint/tendermint/rpc/coretypes"
-	"github.com/tendermint/tendermint/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
+	"github.com/badrootd/sei-tendermint/rpc/client"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 const waitForEventTimeout = 2 * time.Second

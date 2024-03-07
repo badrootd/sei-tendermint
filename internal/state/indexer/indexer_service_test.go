@@ -15,13 +15,13 @@ import (
 	"github.com/stretchr/testify/require"
 	dbm "github.com/tendermint/tm-db"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/internal/eventbus"
-	"github.com/tendermint/tendermint/internal/state/indexer"
-	"github.com/tendermint/tendermint/internal/state/indexer/sink/kv"
-	"github.com/tendermint/tendermint/internal/state/indexer/sink/psql"
-	tmlog "github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/internal/eventbus"
+	"github.com/badrootd/sei-tendermint/internal/state/indexer"
+	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink/kv"
+	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink/psql"
+	tmlog "github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/types"
 
 	// Register the Postgre database driver.
 	_ "github.com/lib/pq"

@@ -7,12 +7,12 @@ import (
 	"sync"
 	"time"
 
-	"github.com/tendermint/tendermint/internal/pubsub"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	"github.com/tendermint/tendermint/libs/log"
-	rpcclient "github.com/tendermint/tendermint/rpc/client"
-	"github.com/tendermint/tendermint/rpc/coretypes"
-	jsonrpcclient "github.com/tendermint/tendermint/rpc/jsonrpc/client"
+	"github.com/badrootd/sei-tendermint/internal/pubsub"
+	tmjson "github.com/badrootd/sei-tendermint/libs/json"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	rpcclient "github.com/badrootd/sei-tendermint/rpc/client"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
+	jsonrpcclient "github.com/badrootd/sei-tendermint/rpc/jsonrpc/client"
 )
 
 // wsEvents is a wrapper around WSClient, which implements SubscriptionClient.

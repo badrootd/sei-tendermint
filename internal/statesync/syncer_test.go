@@ -11,14 +11,14 @@ import (
 	"github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
 
-	clientmocks "github.com/tendermint/tendermint/abci/client/mocks"
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/internal/proxy"
-	sm "github.com/tendermint/tendermint/internal/state"
-	"github.com/tendermint/tendermint/internal/statesync/mocks"
-	ssproto "github.com/tendermint/tendermint/proto/tendermint/statesync"
-	"github.com/tendermint/tendermint/types"
-	"github.com/tendermint/tendermint/version"
+	clientmocks "github.com/badrootd/sei-tendermint/abci/client/mocks"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/internal/proxy"
+	sm "github.com/badrootd/sei-tendermint/internal/state"
+	"github.com/badrootd/sei-tendermint/internal/statesync/mocks"
+	ssproto "github.com/badrootd/sei-tendermint/proto/tendermint/statesync"
+	"github.com/badrootd/sei-tendermint/types"
+	"github.com/badrootd/sei-tendermint/version"
 )
 
 func TestSyncer_SyncAny(t *testing.T) {

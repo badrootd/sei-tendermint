@@ -11,20 +11,20 @@ import (
 
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/internal/eventbus"
-	"github.com/tendermint/tendermint/internal/evidence"
-	"github.com/tendermint/tendermint/internal/evidence/mocks"
-	sm "github.com/tendermint/tendermint/internal/state"
-	smmocks "github.com/tendermint/tendermint/internal/state/mocks"
-	sf "github.com/tendermint/tendermint/internal/state/test/factory"
-	"github.com/tendermint/tendermint/internal/store"
-	"github.com/tendermint/tendermint/internal/test/factory"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/types"
-	"github.com/tendermint/tendermint/version"
+	"github.com/badrootd/sei-tendermint/internal/eventbus"
+	"github.com/badrootd/sei-tendermint/internal/evidence"
+	"github.com/badrootd/sei-tendermint/internal/evidence/mocks"
+	sm "github.com/badrootd/sei-tendermint/internal/state"
+	smmocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
+	sf "github.com/badrootd/sei-tendermint/internal/state/test/factory"
+	"github.com/badrootd/sei-tendermint/internal/store"
+	"github.com/badrootd/sei-tendermint/internal/test/factory"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/types"
+	"github.com/badrootd/sei-tendermint/version"
 
-	tmpubsub "github.com/tendermint/tendermint/internal/pubsub"
-	tmquery "github.com/tendermint/tendermint/internal/pubsub/query"
+	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
+	tmquery "github.com/badrootd/sei-tendermint/internal/pubsub/query"
 )
 
 const evidenceChainID = "test_chain"

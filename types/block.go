@@ -11,13 +11,13 @@ import (
 	"github.com/gogo/protobuf/proto"
 	gogotypes "github.com/gogo/protobuf/types"
 
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/merkle"
-	"github.com/tendermint/tendermint/libs/bits"
-	tmbytes "github.com/tendermint/tendermint/libs/bytes"
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/tendermint/tendermint/version"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/crypto/merkle"
+	"github.com/badrootd/sei-tendermint/libs/bits"
+	tmbytes "github.com/badrootd/sei-tendermint/libs/bytes"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/version"
 )
 
 const (

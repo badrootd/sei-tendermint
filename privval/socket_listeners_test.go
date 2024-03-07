@@ -8,7 +8,7 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/badrootd/sei-tendermint/crypto/ed25519"
 )
 
 //-------------------------------------------

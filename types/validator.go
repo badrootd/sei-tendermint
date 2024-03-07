@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/encoding"
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	tmrand "github.com/tendermint/tendermint/libs/rand"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/crypto/encoding"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
 )
 
 // Volatile state for each Validator

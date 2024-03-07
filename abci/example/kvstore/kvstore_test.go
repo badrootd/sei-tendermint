@@ -9,13 +9,13 @@ import (
 	"github.com/fortytw2/leaktest"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/libs/service"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/service"
 
-	abciclient "github.com/tendermint/tendermint/abci/client"
-	"github.com/tendermint/tendermint/abci/example/code"
-	abciserver "github.com/tendermint/tendermint/abci/server"
-	"github.com/tendermint/tendermint/abci/types"
+	abciclient "github.com/badrootd/sei-tendermint/abci/client"
+	"github.com/badrootd/sei-tendermint/abci/example/code"
+	abciserver "github.com/badrootd/sei-tendermint/abci/server"
+	"github.com/badrootd/sei-tendermint/abci/types"
 )
 
 const (

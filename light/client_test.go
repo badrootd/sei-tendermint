@@ -13,13 +13,13 @@ import (
 	"github.com/stretchr/testify/require"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/internal/test/factory"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/light"
-	"github.com/tendermint/tendermint/light/provider"
-	provider_mocks "github.com/tendermint/tendermint/light/provider/mocks"
-	dbs "github.com/tendermint/tendermint/light/store/db"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/internal/test/factory"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/light"
+	"github.com/badrootd/sei-tendermint/light/provider"
+	provider_mocks "github.com/badrootd/sei-tendermint/light/provider/mocks"
+	dbs "github.com/badrootd/sei-tendermint/light/store/db"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 const (

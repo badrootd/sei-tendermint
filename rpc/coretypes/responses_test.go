@@ -11,9 +11,9 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	pbcrypto "github.com/tendermint/tendermint/proto/tendermint/crypto"
-	"github.com/tendermint/tendermint/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	pbcrypto "github.com/badrootd/sei-tendermint/proto/tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func TestStatusIndexer(t *testing.T) {

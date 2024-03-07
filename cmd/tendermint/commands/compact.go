@@ -10,8 +10,8 @@ import (
 	"github.com/syndtr/goleveldb/leveldb/opt"
 	"github.com/syndtr/goleveldb/leveldb/util"
 
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/libs/log"
 )
 
 func MakeCompactDBCommand(cfg *config.Config, logger log.Logger) *cobra.Command {
@@ -19,8 +19,8 @@ func MakeCompactDBCommand(cfg *config.Config, logger log.Logger) *cobra.Command 
 		Use:   "experimental-compact-goleveldb",
 		Short: "force compacts the tendermint storage engine (only GoLevelDB supported)",
 		Long: `
-This is a temporary utility command that performs a force compaction on the state 
-and blockstores to reduce disk space for a pruning node. This should only be run 
+This is a temporary utility command that performs a force compaction on the state
+and blockstores to reduce disk space for a pruning node. This should only be run
 once the node has stopped. This command will likely be omitted in the future after
 the planned refactor to the storage engine.
 

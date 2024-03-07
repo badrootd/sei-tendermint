@@ -10,8 +10,8 @@ import (
 	"os/signal"
 	"syscall"
 
-	cfg "github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/libs/log"
+	cfg "github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/libs/log"
 )
 
 var (

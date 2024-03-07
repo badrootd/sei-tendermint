@@ -4,8 +4,8 @@ import (
 	"strconv"
 
 	"github.com/spf13/cobra"
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/internal/dbsync"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/internal/dbsync"
 )
 
 func MakeSnapshotCommand(confGetter func(*cobra.Command) (*config.Config, error)) *cobra.Command {

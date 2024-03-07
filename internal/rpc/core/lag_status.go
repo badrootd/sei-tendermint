@@ -2,7 +2,7 @@ package core
 
 import (
 	"context"
-	"github.com/tendermint/tendermint/rpc/coretypes"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
 )
 
 // LagStatus returns Tendermint lag status, if lag is over a certain threshold

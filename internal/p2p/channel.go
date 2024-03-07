@@ -7,7 +7,7 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // Envelope contains a message with sender/receiver routing info.

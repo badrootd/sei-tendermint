@@ -6,8 +6,8 @@ import (
 	"sync"
 	"time"
 
-	"github.com/tendermint/tendermint/libs/bytes"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/libs/bytes"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 //-----------------------------------------------------------------------------

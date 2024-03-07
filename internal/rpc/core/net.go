@@ -5,7 +5,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/tendermint/tendermint/rpc/coretypes"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
 )
 
 // NetInfo returns network info.

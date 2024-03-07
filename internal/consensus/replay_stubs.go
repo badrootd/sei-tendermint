@@ -3,13 +3,13 @@ package consensus
 import (
 	"context"
 
-	abciclient "github.com/tendermint/tendermint/abci/client"
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/internal/libs/clist"
-	"github.com/tendermint/tendermint/internal/mempool"
-	"github.com/tendermint/tendermint/internal/proxy"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/types"
+	abciclient "github.com/badrootd/sei-tendermint/abci/client"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/internal/libs/clist"
+	"github.com/badrootd/sei-tendermint/internal/mempool"
+	"github.com/badrootd/sei-tendermint/internal/proxy"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 //-----------------------------------------------------------------------------

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"sync"
 
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 type IDs struct {

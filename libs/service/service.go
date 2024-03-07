@@ -5,7 +5,7 @@ import (
 	"errors"
 	"sync"
 
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/log"
 )
 
 var (

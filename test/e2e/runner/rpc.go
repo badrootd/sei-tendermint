@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tendermint/tendermint/libs/log"
-	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
-	rpctypes "github.com/tendermint/tendermint/rpc/coretypes"
-	e2e "github.com/tendermint/tendermint/test/e2e/pkg"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	rpchttp "github.com/badrootd/sei-tendermint/rpc/client/http"
+	rpctypes "github.com/badrootd/sei-tendermint/rpc/coretypes"
+	e2e "github.com/badrootd/sei-tendermint/test/e2e/pkg"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // waitForHeight waits for the network to reach a certain height (or above),

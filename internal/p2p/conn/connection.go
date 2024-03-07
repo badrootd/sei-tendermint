@@ -16,13 +16,13 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	"github.com/tendermint/tendermint/internal/libs/flowrate"
-	"github.com/tendermint/tendermint/internal/libs/protoio"
-	"github.com/tendermint/tendermint/internal/libs/timer"
-	"github.com/tendermint/tendermint/libs/log"
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	"github.com/tendermint/tendermint/libs/service"
-	tmp2p "github.com/tendermint/tendermint/proto/tendermint/p2p"
+	"github.com/badrootd/sei-tendermint/internal/libs/flowrate"
+	"github.com/badrootd/sei-tendermint/internal/libs/protoio"
+	"github.com/badrootd/sei-tendermint/internal/libs/timer"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	"github.com/badrootd/sei-tendermint/libs/service"
+	tmp2p "github.com/badrootd/sei-tendermint/proto/tendermint/p2p"
 )
 
 const (

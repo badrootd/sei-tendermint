@@ -11,8 +11,8 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tendermint/tendermint/libs/log"
-	e2e "github.com/tendermint/tendermint/test/e2e/pkg"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	e2e "github.com/badrootd/sei-tendermint/test/e2e/pkg"
 )
 
 const (

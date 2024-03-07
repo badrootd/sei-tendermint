@@ -10,7 +10,7 @@ import (
 	"path/filepath"
 	"sync"
 
-	abci "github.com/tendermint/tendermint/abci/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
 )
 
 const (

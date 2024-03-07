@@ -6,11 +6,11 @@ import (
 	"fmt"
 	"sort"
 
-	tmquery "github.com/tendermint/tendermint/internal/pubsub/query"
-	"github.com/tendermint/tendermint/internal/state/indexer"
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	"github.com/tendermint/tendermint/rpc/coretypes"
-	"github.com/tendermint/tendermint/types"
+	tmquery "github.com/badrootd/sei-tendermint/internal/pubsub/query"
+	"github.com/badrootd/sei-tendermint/internal/state/indexer"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // Tx allows you to query the transaction results. `nil` could mean the

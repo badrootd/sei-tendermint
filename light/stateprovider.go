@@ -12,16 +12,16 @@ import (
 	"github.com/gogo/protobuf/proto"
 	dbm "github.com/tendermint/tm-db"
 
-	"github.com/tendermint/tendermint/internal/p2p"
-	sm "github.com/tendermint/tendermint/internal/state"
-	"github.com/tendermint/tendermint/libs/log"
-	lightprovider "github.com/tendermint/tendermint/light/provider"
-	lighthttp "github.com/tendermint/tendermint/light/provider/http"
-	lightrpc "github.com/tendermint/tendermint/light/rpc"
-	lightdb "github.com/tendermint/tendermint/light/store/db"
-	rpchttp "github.com/tendermint/tendermint/rpc/client/http"
-	"github.com/tendermint/tendermint/types"
-	"github.com/tendermint/tendermint/version"
+	"github.com/badrootd/sei-tendermint/internal/p2p"
+	sm "github.com/badrootd/sei-tendermint/internal/state"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	lightprovider "github.com/badrootd/sei-tendermint/light/provider"
+	lighthttp "github.com/badrootd/sei-tendermint/light/provider/http"
+	lightrpc "github.com/badrootd/sei-tendermint/light/rpc"
+	lightdb "github.com/badrootd/sei-tendermint/light/store/db"
+	rpchttp "github.com/badrootd/sei-tendermint/rpc/client/http"
+	"github.com/badrootd/sei-tendermint/types"
+	"github.com/badrootd/sei-tendermint/version"
 )
 
 const (

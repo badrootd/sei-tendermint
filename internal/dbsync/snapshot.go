@@ -9,8 +9,8 @@ import (
 	"path"
 	"sync"
 
-	"github.com/tendermint/tendermint/config"
-	dstypes "github.com/tendermint/tendermint/proto/tendermint/dbsync"
+	"github.com/badrootd/sei-tendermint/config"
+	dstypes "github.com/badrootd/sei-tendermint/proto/tendermint/dbsync"
 )
 
 func Snapshot(height uint64, dbsyncConfig config.DBSyncConfig, baseConfig config.BaseConfig) error {

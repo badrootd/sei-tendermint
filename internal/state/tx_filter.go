@@ -4,9 +4,9 @@ import (
 	"sync"
 	"time"
 
-	abci "github.com/tendermint/tendermint/abci/types"
-	"github.com/tendermint/tendermint/internal/mempool"
-	"github.com/tendermint/tendermint/types"
+	abci "github.com/badrootd/sei-tendermint/abci/types"
+	"github.com/badrootd/sei-tendermint/internal/mempool"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func cachingStateFetcher(store Store) func() (State, error) {

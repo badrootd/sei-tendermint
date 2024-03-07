@@ -9,8 +9,8 @@ import (
 
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/light"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/light"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 const jsonDir = "./json"

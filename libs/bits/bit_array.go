@@ -10,8 +10,8 @@ import (
 	"strings"
 	"sync"
 
-	tmmath "github.com/tendermint/tendermint/libs/math"
-	tmprotobits "github.com/tendermint/tendermint/proto/tendermint/libs/bits"
+	tmmath "github.com/badrootd/sei-tendermint/libs/math"
+	tmprotobits "github.com/badrootd/sei-tendermint/proto/tendermint/libs/bits"
 )
 
 // BitArray is a thread-safe implementation of a bit array.

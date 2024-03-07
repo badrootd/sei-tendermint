@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tendermint/tendermint/libs/log"
-	rpctypes "github.com/tendermint/tendermint/rpc/coretypes"
-	e2e "github.com/tendermint/tendermint/test/e2e/pkg"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	rpctypes "github.com/badrootd/sei-tendermint/rpc/coretypes"
+	e2e "github.com/badrootd/sei-tendermint/test/e2e/pkg"
 )
 
 // Perturbs a running testnet.

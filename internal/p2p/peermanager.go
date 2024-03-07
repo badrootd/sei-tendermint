@@ -11,15 +11,15 @@ import (
 	"sync"
 	"time"
 
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/libs/log"
 
 	"github.com/gogo/protobuf/proto"
 	"github.com/google/orderedcode"
 	dbm "github.com/tendermint/tm-db"
 
-	tmsync "github.com/tendermint/tendermint/internal/libs/sync"
-	p2pproto "github.com/tendermint/tendermint/proto/tendermint/p2p"
-	"github.com/tendermint/tendermint/types"
+	tmsync "github.com/badrootd/sei-tendermint/internal/libs/sync"
+	p2pproto "github.com/badrootd/sei-tendermint/proto/tendermint/p2p"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 const (

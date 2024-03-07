@@ -11,18 +11,18 @@ import (
 
 	"github.com/gogo/protobuf/proto"
 
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/crypto/ed25519"
-	"github.com/tendermint/tendermint/crypto/secp256k1"
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	"github.com/tendermint/tendermint/internal/libs/protoio"
-	"github.com/tendermint/tendermint/internal/libs/tempfile"
-	tmbytes "github.com/tendermint/tendermint/libs/bytes"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	tmos "github.com/tendermint/tendermint/libs/os"
-	tmtime "github.com/tendermint/tendermint/libs/time"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/tendermint/tendermint/types"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/crypto/ed25519"
+	"github.com/badrootd/sei-tendermint/crypto/secp256k1"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	"github.com/badrootd/sei-tendermint/internal/libs/protoio"
+	"github.com/badrootd/sei-tendermint/internal/libs/tempfile"
+	tmbytes "github.com/badrootd/sei-tendermint/libs/bytes"
+	tmjson "github.com/badrootd/sei-tendermint/libs/json"
+	tmos "github.com/badrootd/sei-tendermint/libs/os"
+	tmtime "github.com/badrootd/sei-tendermint/libs/time"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 // TODO: type ?

@@ -17,8 +17,8 @@ import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 
-	"github.com/tendermint/tendermint/libs/log"
-	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	rpctypes "github.com/badrootd/sei-tendermint/rpc/jsonrpc/types"
 )
 
 type sampleResult struct {

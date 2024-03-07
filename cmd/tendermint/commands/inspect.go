@@ -6,9 +6,9 @@ import (
 
 	"github.com/spf13/cobra"
 
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/internal/inspect"
-	"github.com/tendermint/tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/internal/inspect"
+	"github.com/badrootd/sei-tendermint/libs/log"
 )
 
 // InspectCmd constructs the command to start an inspect server.
@@ -21,7 +21,7 @@ func MakeInspectCommand(conf *config.Config, logger log.Logger) *cobra.Command {
 	issues with Tendermint.
 
 	When the Tendermint consensus engine detects inconsistent state, it will crash the
-	tendermint process. Tendermint will not start up while in this inconsistent state. 
+	tendermint process. Tendermint will not start up while in this inconsistent state.
 	The inspect command can be used to query the block and state store using Tendermint
 	RPC calls to debug issues of inconsistent state.
 	`,

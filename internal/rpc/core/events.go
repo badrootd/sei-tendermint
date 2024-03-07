@@ -6,13 +6,13 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/tendermint/tendermint/internal/eventlog"
-	"github.com/tendermint/tendermint/internal/eventlog/cursor"
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	tmpubsub "github.com/tendermint/tendermint/internal/pubsub"
-	tmquery "github.com/tendermint/tendermint/internal/pubsub/query"
-	"github.com/tendermint/tendermint/rpc/coretypes"
-	rpctypes "github.com/tendermint/tendermint/rpc/jsonrpc/types"
+	"github.com/badrootd/sei-tendermint/internal/eventlog"
+	"github.com/badrootd/sei-tendermint/internal/eventlog/cursor"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
+	tmquery "github.com/badrootd/sei-tendermint/internal/pubsub/query"
+	"github.com/badrootd/sei-tendermint/rpc/coretypes"
+	rpctypes "github.com/badrootd/sei-tendermint/rpc/jsonrpc/types"
 )
 
 const (

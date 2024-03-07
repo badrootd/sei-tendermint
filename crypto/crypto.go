@@ -3,8 +3,8 @@ package crypto
 import (
 	"crypto/sha256"
 
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	"github.com/tendermint/tendermint/libs/bytes"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	"github.com/badrootd/sei-tendermint/libs/bytes"
 )
 
 const (

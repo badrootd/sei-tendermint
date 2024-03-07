@@ -7,13 +7,13 @@ import (
 	"sync"
 	"time"
 
-	cstypes "github.com/tendermint/tendermint/internal/consensus/types"
-	"github.com/tendermint/tendermint/libs/bits"
-	"github.com/tendermint/tendermint/libs/log"
-	tmjson "github.com/tendermint/tendermint/libs/json"
-	tmtime "github.com/tendermint/tendermint/libs/time"
-	tmproto "github.com/tendermint/tendermint/proto/tendermint/types"
-	"github.com/tendermint/tendermint/types"
+	cstypes "github.com/badrootd/sei-tendermint/internal/consensus/types"
+	"github.com/badrootd/sei-tendermint/libs/bits"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	tmjson "github.com/badrootd/sei-tendermint/libs/json"
+	tmtime "github.com/badrootd/sei-tendermint/libs/time"
+	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 var (

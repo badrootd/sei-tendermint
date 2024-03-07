@@ -1,8 +1,8 @@
 package state
 
 import (
-	tmstate "github.com/tendermint/tendermint/proto/tendermint/state"
-	"github.com/tendermint/tendermint/types"
+	tmstate "github.com/badrootd/sei-tendermint/proto/tendermint/state"
+	"github.com/badrootd/sei-tendermint/types"
 )
 
 func ABCIResponsesResultsHash(ar *tmstate.ABCIResponses) []byte {

@@ -4,7 +4,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/tendermint/tendermint/crypto/ed25519"
+	"github.com/badrootd/sei-tendermint/crypto/ed25519"
 )
 
 const (

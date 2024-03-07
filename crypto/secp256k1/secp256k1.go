@@ -11,9 +11,9 @@ import (
 
 	secp256k1 "github.com/btcsuite/btcd/btcec"
 
-	"github.com/tendermint/tendermint/crypto"
-	"github.com/tendermint/tendermint/internal/jsontypes"
-	tmjson "github.com/tendermint/tendermint/libs/json"
+	"github.com/badrootd/sei-tendermint/crypto"
+	"github.com/badrootd/sei-tendermint/internal/jsontypes"
+	tmjson "github.com/badrootd/sei-tendermint/libs/json"
 
 	// necessary for Bitcoin address format
 	"golang.org/x/crypto/ripemd160" //nolint:staticcheck

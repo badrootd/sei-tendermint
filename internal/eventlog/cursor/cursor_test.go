@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/tendermint/tendermint/internal/eventlog/cursor"
+	"github.com/badrootd/sei-tendermint/internal/eventlog/cursor"
 )
 
 func mustParse(t *testing.T, s string) cursor.Cursor {

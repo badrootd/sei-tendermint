@@ -3,12 +3,12 @@ package main
 import (
 	"context"
 
-	"github.com/tendermint/tendermint/cmd/tendermint/commands"
-	"github.com/tendermint/tendermint/cmd/tendermint/commands/debug"
-	"github.com/tendermint/tendermint/config"
-	"github.com/tendermint/tendermint/libs/cli"
-	"github.com/tendermint/tendermint/libs/log"
-	"github.com/tendermint/tendermint/node"
+	"github.com/badrootd/sei-tendermint/cmd/tendermint/commands"
+	"github.com/badrootd/sei-tendermint/cmd/tendermint/commands/debug"
+	"github.com/badrootd/sei-tendermint/config"
+	"github.com/badrootd/sei-tendermint/libs/cli"
+	"github.com/badrootd/sei-tendermint/libs/log"
+	"github.com/badrootd/sei-tendermint/node"
 )
 
 func main() {

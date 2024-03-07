@@ -1,4 +1,4 @@
-module github.com/tendermint/tendermint
+module github.com/badrootd/sei-tendermint
 
 go 1.19
 
