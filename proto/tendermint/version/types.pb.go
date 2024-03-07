@@ -79,7 +79,7 @@ func (m *Consensus) GetApp() uint64 {
 }
 
 func init() {
-	proto.RegisterType((*Consensus)(nil), "tendermint.version.Consensus")
+	proto.RegisterType((*Consensus)(nil), "badrootdseitendermint.version.Consensus")
 }
 
 func init() { proto.RegisterFile("tendermint/version/types.proto", fileDescriptor_f9b42966edc5edad) }
