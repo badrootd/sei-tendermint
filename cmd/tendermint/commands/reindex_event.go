@@ -3,6 +3,7 @@ package commands
 import (
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"path/filepath"
 	"strings"
 
@@ -16,7 +17,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink/kv"
 	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink/psql"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/os"
 	"github.com/badrootd/sei-tendermint/rpc/coretypes"

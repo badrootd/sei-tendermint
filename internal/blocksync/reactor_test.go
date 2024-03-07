@@ -2,6 +2,7 @@ package blocksync
 
 import (
 	"context"
+	"github.com/badrootd/sei-tendermint/store"
 	"os"
 	"testing"
 	"time"
@@ -25,7 +26,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	sm "github.com/badrootd/sei-tendermint/internal/state"
 	sf "github.com/badrootd/sei-tendermint/internal/state/test/factory"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	bcproto "github.com/badrootd/sei-tendermint/proto/tendermint/blocksync"

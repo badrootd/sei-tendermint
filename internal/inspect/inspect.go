@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"net"
 	"net/http"
 
@@ -14,7 +15,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmstrings "github.com/badrootd/sei-tendermint/libs/strings"
 	"github.com/badrootd/sei-tendermint/types"

@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"strings"
 	"time"
 
@@ -24,7 +25,6 @@ import (
 	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	"github.com/badrootd/sei-tendermint/internal/statesync"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmnet "github.com/badrootd/sei-tendermint/libs/net"
 	tmstrings "github.com/badrootd/sei-tendermint/libs/strings"

@@ -5,26 +5,26 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"reflect"
 	"runtime/debug"
 	"sort"
 	"sync"
 	"time"
 
-	"github.com/gogo/protobuf/proto"
 	abciclient "github.com/badrootd/sei-tendermint/abci/client"
 	abci "github.com/badrootd/sei-tendermint/abci/types"
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/service"
 	"github.com/badrootd/sei-tendermint/light"
 	"github.com/badrootd/sei-tendermint/light/provider"
 	ssproto "github.com/badrootd/sei-tendermint/proto/tendermint/statesync"
 	"github.com/badrootd/sei-tendermint/types"
+	"github.com/gogo/protobuf/proto"
 )
 
 var (

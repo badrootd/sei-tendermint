@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"io"
 	"os"
 	"strconv"
@@ -18,7 +19,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
 	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/types"
 )

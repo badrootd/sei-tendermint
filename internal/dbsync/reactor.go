@@ -4,24 +4,24 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"os"
 	"path/filepath"
 	"strconv"
 	"sync"
 	"time"
 
-	"github.com/gogo/protobuf/proto"
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/service"
 	"github.com/badrootd/sei-tendermint/light"
 	"github.com/badrootd/sei-tendermint/light/provider"
 	dstypes "github.com/badrootd/sei-tendermint/proto/tendermint/dbsync"
 	"github.com/badrootd/sei-tendermint/types"
+	"github.com/gogo/protobuf/proto"
 )
 
 const (

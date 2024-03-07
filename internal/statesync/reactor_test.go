@@ -3,6 +3,7 @@ package statesync
 import (
 	"context"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/store"
 	"strings"
 	"sync"
 	"testing"
@@ -20,7 +21,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	smmocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
 	"github.com/badrootd/sei-tendermint/internal/statesync/mocks"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/light"

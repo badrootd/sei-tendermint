@@ -2,6 +2,7 @@ package evidence_test
 
 import (
 	"context"
+	"github.com/badrootd/sei-tendermint/store"
 	"testing"
 	"time"
 
@@ -17,7 +18,6 @@ import (
 	sm "github.com/badrootd/sei-tendermint/internal/state"
 	smmocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
 	sf "github.com/badrootd/sei-tendermint/internal/state/test/factory"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/types"

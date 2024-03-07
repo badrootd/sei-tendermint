@@ -2,6 +2,7 @@ package state_test
 
 import (
 	"context"
+	"github.com/badrootd/sei-tendermint/store"
 	"math/rand"
 	"testing"
 	"time"
@@ -13,7 +14,6 @@ import (
 	"github.com/badrootd/sei-tendermint/crypto/tmhash"
 	"github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/internal/state/mocks"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	rpctest "github.com/badrootd/sei-tendermint/rpc/test"
 	"github.com/badrootd/sei-tendermint/types"

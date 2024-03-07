@@ -2,6 +2,7 @@ package state_test
 
 import (
 	"context"
+	"github.com/badrootd/sei-tendermint/store"
 	"testing"
 	"time"
 
@@ -20,7 +21,6 @@ import (
 	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/internal/state/mocks"
 	statefactory "github.com/badrootd/sei-tendermint/internal/state/test/factory"
-	"github.com/badrootd/sei-tendermint/internal/store"
 	testfactory "github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmtime "github.com/badrootd/sei-tendermint/libs/time"
