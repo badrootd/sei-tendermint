@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state"
 	"github.com/badrootd/sei-tendermint/store"
 	"os"
 	"path/filepath"
@@ -14,7 +15,6 @@ import (
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/p2p"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/service"
 	"github.com/badrootd/sei-tendermint/light"
@@ -104,7 +104,7 @@ type Reactor struct {
 	// peers used by the p2p state provider and in reverse sync.
 	dispatcher    *light.Dispatcher
 	peers         *light.PeerList
-	stateStore    sm.Store
+	stateStore    state.Store
 	blockStore    *store.BlockStore
 	initialHeight int64
 	shouldSync    bool
@@ -126,7 +126,7 @@ type Reactor struct {
 
 	mtx sync.RWMutex
 
-	postSyncHook func(context.Context, sm.State) error
+	postSyncHook func(context.Context, state.State) error
 }
 
 func NewReactor(
@@ -134,13 +134,13 @@ func NewReactor(
 	config config.DBSyncConfig,
 	baseConfig config.BaseConfig,
 	peerEvents p2p.PeerEventSubscriber,
-	stateStore sm.Store,
+	stateStore state.Store,
 	blockStore *store.BlockStore,
 	initialHeight int64,
 	chainID string,
 	eventBus *eventbus.EventBus,
 	shouldSync bool,
-	postSyncHook func(context.Context, sm.State) error,
+	postSyncHook func(context.Context, state.State) error,
 ) *Reactor {
 	reactor := &Reactor{
 		logger:        logger,
@@ -650,27 +650,27 @@ func (r *Reactor) waitForEnoughPeers(ctx context.Context, numPeers int) error {
 	return nil
 }
 
-func (r *Reactor) commitState(ctx context.Context, height uint64) (sm.State, *types.Commit, error) {
+func (r *Reactor) commitState(ctx context.Context, height uint64) (state.State, *types.Commit, error) {
 	appHash, err := r.stateProvider.AppHash(ctx, height)
 	if err != nil {
 		r.logger.Error(fmt.Sprintf("error getting apphash for %d due to %s", height, err))
-		return sm.State{}, nil, err
+		return state.State{}, nil, err
 	}
 	r.logger.Info(fmt.Sprintf("got apphash %X for %d", appHash, height))
-	state, err := r.stateProvider.State(ctx, height)
+	stateObj, err := r.stateProvider.State(ctx, height)
 	if err != nil {
 		r.logger.Error(fmt.Sprintf("error getting state for %d due to %s", height, err))
-		return sm.State{}, nil, err
+		return state.State{}, nil, err
 	}
 	commit, err := r.stateProvider.Commit(ctx, height)
 	if err != nil {
 		r.logger.Error(fmt.Sprintf("error committing for %d due to %s", height, err))
-		return sm.State{}, nil, err
+		return state.State{}, nil, err
 	}
-	return state, commit, nil
+	return stateObj, commit, nil
 }
 
-func (r *Reactor) postSync(ctx context.Context, state sm.State, commit *types.Commit) error {
+func (r *Reactor) postSync(ctx context.Context, state state.State, commit *types.Commit) error {
 	if err := r.stateStore.Bootstrap(state); err != nil {
 		return err
 	}

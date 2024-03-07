@@ -5,6 +5,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state"
+	indexer2 "github.com/badrootd/sei-tendermint/state/indexer"
+	"github.com/badrootd/sei-tendermint/statesync"
 	"github.com/badrootd/sei-tendermint/store"
 	"strings"
 	"time"
@@ -22,9 +25,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	"github.com/badrootd/sei-tendermint/internal/p2p/conn"
 	"github.com/badrootd/sei-tendermint/internal/p2p/pex"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/statesync"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmnet "github.com/badrootd/sei-tendermint/libs/net"
 	tmstrings "github.com/badrootd/sei-tendermint/libs/strings"
@@ -93,7 +93,7 @@ func initDBs(
 	return blockStore, stateDB, makeCloser(closers), nil
 }
 
-func logNodeStartupInfo(state sm.State, pubKey crypto.PubKey, logger log.Logger, mode string) {
+func logNodeStartupInfo(state state.State, pubKey crypto.PubKey, logger log.Logger, mode string) {
 	// Log the version info.
 	logger.Info("Version info",
 		"tmVersion", version.TMVersion,
@@ -130,7 +130,7 @@ func logNodeStartupInfo(state sm.State, pubKey crypto.PubKey, logger log.Logger,
 	}
 }
 
-func onlyValidatorIsUs(state sm.State, pubKey crypto.PubKey) bool {
+func onlyValidatorIsUs(state state.State, pubKey crypto.PubKey) bool {
 	if state.Validators.Size() > 1 {
 		return false
 	}
@@ -142,7 +142,7 @@ func createMempoolReactor(
 	logger log.Logger,
 	cfg *config.Config,
 	appClient abciclient.Client,
-	store sm.Store,
+	store state.Store,
 	memplMetrics *mempool.Metrics,
 	peerEvents p2p.PeerEventSubscriber,
 	peerManager *p2p.PeerManager,
@@ -155,8 +155,8 @@ func createMempoolReactor(
 		appClient,
 		peerManager,
 		mempool.WithMetrics(memplMetrics),
-		mempool.WithPreCheck(sm.TxPreCheckFromStore(store)),
-		mempool.WithPostCheck(sm.TxPostCheckFromStore(store)),
+		mempool.WithPreCheck(state.TxPreCheckFromStore(store)),
+		mempool.WithPostCheck(state.TxPostCheckFromStore(store)),
 	)
 
 	reactor := mempool.NewReactor(
@@ -177,7 +177,7 @@ func createEvidenceReactor(
 	logger log.Logger,
 	cfg *config.Config,
 	dbProvider config.DBProvider,
-	store sm.Store,
+	store state.Store,
 	blockStore *store.BlockStore,
 	peerEvents p2p.PeerEventSubscriber,
 	metrics *evidence.Metrics,
@@ -323,14 +323,14 @@ func createRouter(
 func makeNodeInfo(
 	cfg *config.Config,
 	nodeKey types.NodeKey,
-	eventSinks []indexer.EventSink,
+	eventSinks []indexer2.EventSink,
 	genDoc *types.GenesisDoc,
 	versionInfo version.Consensus,
 ) (types.NodeInfo, error) {
 
 	txIndexerStatus := "off"
 
-	if indexer.IndexingEnabled(eventSinks) {
+	if indexer2.IndexingEnabled(eventSinks) {
 		txIndexerStatus = "on"
 	}
 
@@ -379,7 +379,7 @@ func makeSeedNodeInfo(
 	cfg *config.Config,
 	nodeKey types.NodeKey,
 	genDoc *types.GenesisDoc,
-	state sm.State,
+	state state.State,
 ) (types.NodeInfo, error) {
 	nodeInfo := types.NodeInfo{
 		ProtocolVersion: types.ProtocolVersion{

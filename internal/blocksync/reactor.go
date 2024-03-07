@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state"
 	"github.com/badrootd/sei-tendermint/store"
 	"runtime/debug"
 	"sync/atomic"
@@ -13,7 +14,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/consensus"
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/p2p"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/service"
 	bcproto "github.com/badrootd/sei-tendermint/proto/tendermint/blocksync"
@@ -53,7 +53,7 @@ func GetChannelDescriptor() *p2p.ChannelDescriptor {
 type consensusReactor interface {
 	// For when we switch from block sync reactor to the consensus
 	// machine.
-	SwitchToConsensus(ctx context.Context, state sm.State, skipWAL bool)
+	SwitchToConsensus(ctx context.Context, state state.State, skipWAL bool)
 }
 
 type peerError struct {
@@ -71,12 +71,12 @@ type Reactor struct {
 	logger log.Logger
 
 	// immutable
-	initialState sm.State
+	initialState state.State
 	// store
-	stateStore sm.Store
+	stateStore state.Store
 
-	blockExec             *sm.BlockExecutor
-	store                 sm.BlockStore
+	blockExec             *state.BlockExecutor
+	store                 state.BlockStore
 	pool                  *BlockPool
 	consReactor           consensusReactor
 	blockSync             *atomicBool
@@ -104,8 +104,8 @@ type Reactor struct {
 // NewReactor returns new reactor instance.
 func NewReactor(
 	logger log.Logger,
-	stateStore sm.Store,
-	blockExec *sm.BlockExecutor,
+	stateStore state.Store,
+	blockExec *state.BlockExecutor,
 	store *store.BlockStore,
 	consReactor consensusReactor,
 	peerEvents p2p.PeerEventSubscriber,
@@ -425,7 +425,7 @@ func (r *Reactor) processPeerUpdates(ctx context.Context, peerUpdates *p2p.PeerU
 
 // SwitchToBlockSync is called by the state sync reactor when switching to fast
 // sync.
-func (r *Reactor) SwitchToBlockSync(ctx context.Context, state sm.State) error {
+func (r *Reactor) SwitchToBlockSync(ctx context.Context, state state.State) error {
 	r.blockSync.Set()
 	r.initialState = state
 	r.pool.height = state.LastBlockHeight + 1

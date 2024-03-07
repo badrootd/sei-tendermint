@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	indexer2 "github.com/badrootd/sei-tendermint/state/indexer"
+	"github.com/badrootd/sei-tendermint/state/indexer/sink"
 	"github.com/badrootd/sei-tendermint/store"
 	"net"
 	"net/http"
@@ -12,9 +15,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/inspect/rpc"
 	rpccore "github.com/badrootd/sei-tendermint/internal/rpc/core"
-	"github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmstrings "github.com/badrootd/sei-tendermint/libs/strings"
 	"github.com/badrootd/sei-tendermint/types"
@@ -33,7 +33,7 @@ type Inspector struct {
 
 	config *config.RPCConfig
 
-	indexerService *indexer.Service
+	indexerService *indexer2.Service
 	eventBus       *eventbus.EventBus
 	logger         log.Logger
 }
@@ -42,7 +42,7 @@ type Inspector struct {
 // The Inspector type does not modify the state or block stores.
 // The sinks are used to enable block and transaction querying via the RPC server.
 // The caller is responsible for starting and stopping the Inspector service.
-func New(cfg *config.RPCConfig, bs state.BlockStore, ss state.Store, es []indexer.EventSink, logger log.Logger) *Inspector {
+func New(cfg *config.RPCConfig, bs state2.BlockStore, ss state2.Store, es []indexer2.EventSink, logger log.Logger) *Inspector {
 	eb := eventbus.NewDefault(logger.With("module", "events"))
 
 	return &Inspector{
@@ -50,7 +50,7 @@ func New(cfg *config.RPCConfig, bs state.BlockStore, ss state.Store, es []indexe
 		config:   cfg,
 		logger:   logger,
 		eventBus: eb,
-		indexerService: indexer.NewService(indexer.ServiceArgs{
+		indexerService: indexer2.NewService(indexer2.ServiceArgs{
 			Sinks:    es,
 			EventBus: eb,
 			Logger:   logger.With("module", "txindex"),
@@ -77,7 +77,7 @@ func NewFromConfig(logger log.Logger, cfg *config.Config) (*Inspector, error) {
 	if err != nil {
 		return nil, err
 	}
-	ss := state.NewStore(sDB)
+	ss := state2.NewStore(sDB)
 	return New(cfg.RPC, bs, ss, sinks, logger), nil
 }
 

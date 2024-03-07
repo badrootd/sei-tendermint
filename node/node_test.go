@@ -4,6 +4,9 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	"github.com/badrootd/sei-tendermint/state/indexer"
+	"github.com/badrootd/sei-tendermint/state/indexer/sink"
 	"github.com/badrootd/sei-tendermint/store"
 	"math"
 	"net"
@@ -26,9 +29,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/mempool"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	"github.com/badrootd/sei-tendermint/internal/pubsub"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
@@ -284,7 +284,7 @@ func TestCreateProposalBlock(t *testing.T) {
 
 	const height int64 = 1
 	state, stateDB, privVals := state(t, 1, height)
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	maxBytes := 16384
 	const partSize uint32 = 256
 	maxEvidenceBytes := int64(maxBytes / 2)
@@ -330,7 +330,7 @@ func TestCreateProposalBlock(t *testing.T) {
 
 	eventBus := eventbus.NewDefault(logger)
 	require.NoError(t, eventBus.Start(ctx))
-	blockExec := sm.NewBlockExecutor(
+	blockExec := state2.NewBlockExecutor(
 		stateStore,
 		logger,
 		proxyApp,
@@ -338,7 +338,7 @@ func TestCreateProposalBlock(t *testing.T) {
 		evidencePool,
 		blockStore,
 		eventBus,
-		sm.NopMetrics(),
+		state2.NopMetrics(),
 	)
 
 	extCommit := &types.ExtendedCommit{Height: height - 1}
@@ -386,7 +386,7 @@ func TestMaxTxsProposalBlockSize(t *testing.T) {
 
 	const height int64 = 1
 	state, stateDB, _ := state(t, 1, height)
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	blockStore := store.NewBlockStore(dbm.NewMemDB())
 	const maxBytes int64 = 16384
 	const partSize uint32 = 256
@@ -411,15 +411,15 @@ func TestMaxTxsProposalBlockSize(t *testing.T) {
 	eventBus := eventbus.NewDefault(logger)
 	require.NoError(t, eventBus.Start(ctx))
 
-	blockExec := sm.NewBlockExecutor(
+	blockExec := state2.NewBlockExecutor(
 		stateStore,
 		logger,
 		proxyApp,
 		mp,
-		sm.EmptyEvidencePool{},
+		state2.EmptyEvidencePool{},
 		blockStore,
 		eventBus,
-		sm.NopMetrics(),
+		state2.NopMetrics(),
 	)
 
 	extCommit := &types.ExtendedCommit{Height: height - 1}
@@ -459,7 +459,7 @@ func TestMaxProposalBlockSize(t *testing.T) {
 
 	state, stateDB, privVals := state(t, types.MaxVotesCount, int64(1))
 
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	blockStore := store.NewBlockStore(dbm.NewMemDB())
 	const maxBytes int64 = 1024 * 1024 * 2
 	state.ConsensusParams.Block.MaxBytes = maxBytes
@@ -489,15 +489,15 @@ func TestMaxProposalBlockSize(t *testing.T) {
 	eventBus := eventbus.NewDefault(logger)
 	require.NoError(t, eventBus.Start(ctx))
 
-	blockExec := sm.NewBlockExecutor(
+	blockExec := state2.NewBlockExecutor(
 		stateStore,
 		logger,
 		proxyApp,
 		mp,
-		sm.EmptyEvidencePool{},
+		state2.EmptyEvidencePool{},
 		blockStore,
 		eventBus,
-		sm.NopMetrics(),
+		state2.NopMetrics(),
 	)
 
 	blockID := types.BlockID{
@@ -720,7 +720,7 @@ func TestNodeSetEventSink(t *testing.T) {
 	t.Cleanup(cleanup(ns))
 }
 
-func state(t *testing.T, nVals int, height int64) (sm.State, dbm.DB, []types.PrivValidator) {
+func state(t *testing.T, nVals int, height int64) (state2.State, dbm.DB, []types.PrivValidator) {
 	t.Helper()
 	privVals := make([]types.PrivValidator, nVals)
 	vals := make([]types.GenesisValidator, nVals)
@@ -734,7 +734,7 @@ func state(t *testing.T, nVals int, height int64) (sm.State, dbm.DB, []types.Pri
 			Name:    fmt.Sprintf("test%d", i),
 		}
 	}
-	s, _ := sm.MakeGenesisState(&types.GenesisDoc{
+	s, _ := state2.MakeGenesisState(&types.GenesisDoc{
 		ChainID:    "test-chain",
 		Validators: vals,
 		AppHash:    nil,
@@ -744,7 +744,7 @@ func state(t *testing.T, nVals int, height int64) (sm.State, dbm.DB, []types.Pri
 	stateDB := dbm.NewMemDB()
 	t.Cleanup(func() { require.NoError(t, stateDB.Close()) })
 
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	require.NoError(t, stateStore.Save(s))
 
 	for i := 1; i < int(height); i++ {
@@ -762,11 +762,11 @@ func TestLoadStateFromGenesis(t *testing.T) {
 	_ = loadStatefromGenesis(ctx, t)
 }
 
-func loadStatefromGenesis(ctx context.Context, t *testing.T) sm.State {
+func loadStatefromGenesis(ctx context.Context, t *testing.T) state2.State {
 	t.Helper()
 
 	stateDB := dbm.NewMemDB()
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	cfg, err := config.ResetTestRoot(t.TempDir(), "load_state_from_genesis")
 	require.NoError(t, err)
 

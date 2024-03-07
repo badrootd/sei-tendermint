@@ -3,6 +3,8 @@ package core
 import (
 	"context"
 	"fmt"
+	sm "github.com/badrootd/sei-tendermint/state"
+	"github.com/badrootd/sei-tendermint/state/mocks"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -11,8 +13,6 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	abci "github.com/badrootd/sei-tendermint/abci/types"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/mocks"
 	"github.com/badrootd/sei-tendermint/rpc/coretypes"
 )
 

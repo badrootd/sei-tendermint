@@ -3,6 +3,7 @@ package evidence_test
 import (
 	"context"
 	"encoding/hex"
+	sm "github.com/badrootd/sei-tendermint/state"
 	"math/rand"
 	"sync"
 	"testing"
@@ -21,7 +22,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/evidence/mocks"
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	"github.com/badrootd/sei-tendermint/internal/p2p/p2ptest"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
 	"github.com/badrootd/sei-tendermint/types"

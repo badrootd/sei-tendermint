@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	statemocks "github.com/badrootd/sei-tendermint/state/mocks"
 	"github.com/badrootd/sei-tendermint/store"
 	"math/rand"
 	"os"
@@ -28,8 +30,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	"github.com/badrootd/sei-tendermint/internal/p2p/p2ptest"
 	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	statemocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmcons "github.com/badrootd/sei-tendermint/proto/tendermint/consensus"
@@ -453,8 +453,8 @@ func TestReactorWithEvidence(t *testing.T) {
 
 	for i := 0; i < n; i++ {
 		stateDB := dbm.NewMemDB() // each state needs its own db
-		stateStore := sm.NewStore(stateDB)
-		state, err := sm.MakeGenesisState(genDoc)
+		stateStore := state2.NewStore(stateDB)
+		state, err := state2.MakeGenesisState(genDoc)
 		require.NoError(t, err)
 		require.NoError(t, stateStore.Save(state))
 		thisConfig, err := ResetConfig(t.TempDir(), fmt.Sprintf("%s_%d", testName, i))
@@ -497,12 +497,12 @@ func TestReactorWithEvidence(t *testing.T) {
 		evpool.On("PendingEvidence", mock.AnythingOfType("int64")).Return([]types.Evidence{
 			ev}, int64(len(ev.Bytes())))
 		evpool.On("Update", mock.MatchedBy(func(ctx context.Context) bool { return true }), mock.AnythingOfType("state.State"), mock.AnythingOfType("types.EvidenceList")).Return()
-		evpool2 := sm.EmptyEvidencePool{}
+		evpool2 := state2.EmptyEvidencePool{}
 
 		eventBus := eventbus.NewDefault(log.NewNopLogger().With("module", "events"))
 		require.NoError(t, eventBus.Start(ctx))
 
-		blockExec := sm.NewBlockExecutor(stateStore, log.NewNopLogger(), proxyAppConnCon, mempool, evpool, blockStore, eventBus, sm.NopMetrics())
+		blockExec := state2.NewBlockExecutor(stateStore, log.NewNopLogger(), proxyAppConnCon, mempool, evpool, blockStore, eventBus, state2.NopMetrics())
 
 		cs, err := NewState(logger.With("validator", i, "module", "consensus"),
 			thisConfig.Consensus, stateStore, blockExec, blockStore, mempool, evpool2, eventBus, []trace.TracerProviderOption{})

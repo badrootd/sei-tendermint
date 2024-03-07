@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
 	"github.com/badrootd/sei-tendermint/store"
 	"os"
 	"path/filepath"
@@ -26,7 +27,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/mempool"
 	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	tmbytes "github.com/badrootd/sei-tendermint/libs/bytes"
 	"github.com/badrootd/sei-tendermint/libs/log"
@@ -438,7 +438,7 @@ func newState(
 	ctx context.Context,
 	t *testing.T,
 	logger log.Logger,
-	state sm.State,
+	state state2.State,
 	pv types.PrivValidator,
 	app abci.Application,
 ) *State {
@@ -455,7 +455,7 @@ func newStateWithConfig(
 	t *testing.T,
 	logger log.Logger,
 	thisConfig *config.Config,
-	state sm.State,
+	state state2.State,
 	pv types.PrivValidator,
 	app abci.Application,
 ) *State {
@@ -468,7 +468,7 @@ func newStateWithConfigAndBlockStore(
 	t *testing.T,
 	logger log.Logger,
 	thisConfig *config.Config,
-	state sm.State,
+	state state2.State,
 	pv types.PrivValidator,
 	app abci.Application,
 	blockStore *store.BlockStore,
@@ -492,17 +492,17 @@ func newStateWithConfigAndBlockStore(
 		mempool.EnableTxsAvailable()
 	}
 
-	evpool := sm.EmptyEvidencePool{}
+	evpool := state2.EmptyEvidencePool{}
 
 	// Make State
 	stateDB := dbm.NewMemDB()
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	require.NoError(t, stateStore.Save(state))
 
 	eventBus := eventbus.NewDefault(logger.With("module", "events"))
 	require.NoError(t, eventBus.Start(ctx))
 
-	blockExec := sm.NewBlockExecutor(stateStore, logger, proxyAppConnCon, mempool, evpool, blockStore, eventBus, sm.NopMetrics())
+	blockExec := state2.NewBlockExecutor(stateStore, logger, proxyAppConnCon, mempool, evpool, blockStore, eventBus, state2.NopMetrics())
 	cs, err := NewState(logger.With("module", "consensus"),
 		thisConfig.Consensus,
 		stateStore,
@@ -820,7 +820,7 @@ func makeConsensusState(
 
 	for i := 0; i < nValidators; i++ {
 		blockStore := store.NewBlockStore(dbm.NewMemDB()) // each state needs its own db
-		state, err := sm.MakeGenesisState(genDoc)
+		state, err := state2.MakeGenesisState(genDoc)
 		require.NoError(t, err)
 		thisConfig, err := ResetConfig(tempDir, fmt.Sprintf("%s_%d", testName, i))
 		require.NoError(t, err)
@@ -878,7 +878,7 @@ func randConsensusNetWithPeers(
 	var peer0Config *config.Config
 	configRootDirs := make([]string, 0, nPeers)
 	for i := 0; i < nPeers; i++ {
-		state, _ := sm.MakeGenesisState(genDoc)
+		state, _ := state2.MakeGenesisState(genDoc)
 		thisConfig, err := ResetConfig(t.TempDir(), fmt.Sprintf("%s_%d", testName, i))
 		require.NoError(t, err)
 
@@ -931,7 +931,7 @@ type genesisStateArgs struct {
 	Time       time.Time
 }
 
-func makeGenesisState(ctx context.Context, t *testing.T, cfg *config.Config, args genesisStateArgs) (sm.State, []types.PrivValidator) {
+func makeGenesisState(ctx context.Context, t *testing.T, cfg *config.Config, args genesisStateArgs) (state2.State, []types.PrivValidator) {
 	t.Helper()
 	if args.Power == 0 {
 		args.Power = 1
@@ -947,7 +947,7 @@ func makeGenesisState(ctx context.Context, t *testing.T, cfg *config.Config, arg
 		args.Time = time.Now()
 	}
 	genDoc := factory.GenesisDoc(cfg, args.Time, valSet.Validators, args.Params)
-	s0, err := sm.MakeGenesisState(genDoc)
+	s0, err := state2.MakeGenesisState(genDoc)
 	require.NoError(t, err)
 	return s0, privValidators
 }

@@ -5,6 +5,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
 	"github.com/badrootd/sei-tendermint/store"
 	"io"
 	mrand "math/rand"
@@ -20,7 +21,6 @@ import (
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/privval"
 	"github.com/badrootd/sei-tendermint/types"
@@ -55,8 +55,8 @@ func WALGenerateNBlocks(ctx context.Context, t *testing.T, logger log.Logger, wr
 	}
 	blockStoreDB := dbm.NewMemDB()
 	stateDB := blockStoreDB
-	stateStore := sm.NewStore(stateDB)
-	state, err := sm.MakeGenesisState(genDoc)
+	stateStore := state2.NewStore(stateDB)
+	state, err := state2.MakeGenesisState(genDoc)
 	if err != nil {
 		t.Fatal(fmt.Errorf("failed to make genesis state: %w", err))
 	}
@@ -80,8 +80,8 @@ func WALGenerateNBlocks(ctx context.Context, t *testing.T, logger log.Logger, wr
 	t.Cleanup(func() { eventBus.Stop(); eventBus.Wait() })
 
 	mempool := emptyMempool{}
-	evpool := sm.EmptyEvidencePool{}
-	blockExec := sm.NewBlockExecutor(stateStore, log.NewNopLogger(), proxyApp, mempool, evpool, blockStore, eventBus, sm.NopMetrics())
+	evpool := state2.EmptyEvidencePool{}
+	blockExec := state2.NewBlockExecutor(stateStore, log.NewNopLogger(), proxyApp, mempool, evpool, blockStore, eventBus, state2.NopMetrics())
 	consensusState, err := NewState(logger, cfg.Consensus, stateStore, blockExec, blockStore, mempool, evpool, eventBus, []trace.TracerProviderOption{})
 	if err != nil {
 		t.Fatal(err)

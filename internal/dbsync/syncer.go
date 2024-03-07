@@ -6,6 +6,7 @@ import (
 	"crypto/md5"
 	"errors"
 	"fmt"
+	sm "github.com/badrootd/sei-tendermint/state"
 	"io/fs"
 	"os"
 	"path"
@@ -14,7 +15,6 @@ import (
 	"time"
 
 	"github.com/badrootd/sei-tendermint/config"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	dstypes "github.com/badrootd/sei-tendermint/proto/tendermint/dbsync"
 	"github.com/badrootd/sei-tendermint/types"

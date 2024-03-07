@@ -4,10 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	indexer2 "github.com/badrootd/sei-tendermint/state/indexer"
 	"sort"
 
 	tmquery "github.com/badrootd/sei-tendermint/internal/pubsub/query"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	tmmath "github.com/badrootd/sei-tendermint/libs/math"
 	"github.com/badrootd/sei-tendermint/rpc/coretypes"
 	"github.com/badrootd/sei-tendermint/types"
@@ -19,12 +19,12 @@ import (
 // More: https://docs.tendermint.com/master/rpc/#/Info/tx
 func (env *Environment) Tx(ctx context.Context, req *coretypes.RequestTx) (*coretypes.ResultTx, error) {
 	// if index is disabled, return error
-	if !indexer.KVSinkEnabled(env.EventSinks) {
+	if !indexer2.KVSinkEnabled(env.EventSinks) {
 		return nil, errors.New("transaction querying is disabled due to no kvEventSink")
 	}
 
 	for _, sink := range env.EventSinks {
-		if sink.Type() == indexer.KV {
+		if sink.Type() == indexer2.KV {
 			r, err := sink.GetTxByHash(req.Hash)
 			if r == nil {
 				return nil, fmt.Errorf("tx (%X) not found, err: %w", req.Hash, err)
@@ -54,7 +54,7 @@ func (env *Environment) Tx(ctx context.Context, req *coretypes.RequestTx) (*core
 // list of transactions (maximum ?per_page entries) and the total count.
 // More: https://docs.tendermint.com/master/rpc/#/Info/tx_search
 func (env *Environment) TxSearch(ctx context.Context, req *coretypes.RequestTxSearch) (*coretypes.ResultTxSearch, error) {
-	if !indexer.KVSinkEnabled(env.EventSinks) {
+	if !indexer2.KVSinkEnabled(env.EventSinks) {
 		return nil, fmt.Errorf("transaction searching is disabled due to no kvEventSink")
 	} else if len(req.Query) > maxQueryLength {
 		return nil, errors.New("maximum query length exceeded")
@@ -66,7 +66,7 @@ func (env *Environment) TxSearch(ctx context.Context, req *coretypes.RequestTxSe
 	}
 
 	for _, sink := range env.EventSinks {
-		if sink.Type() == indexer.KV {
+		if sink.Type() == indexer2.KV {
 			results, err := sink.SearchTxEvents(ctx, q)
 			if err != nil {
 				return nil, err

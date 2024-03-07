@@ -3,6 +3,8 @@ package evidence_test
 import (
 	"bytes"
 	"context"
+	sm "github.com/badrootd/sei-tendermint/state"
+	smmocks "github.com/badrootd/sei-tendermint/state/mocks"
 	"testing"
 	"time"
 
@@ -14,8 +16,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/evidence"
 	"github.com/badrootd/sei-tendermint/internal/evidence/mocks"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	smmocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"

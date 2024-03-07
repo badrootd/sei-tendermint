@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
 	"hash/crc32"
 	"io"
 	"reflect"
@@ -15,7 +16,6 @@ import (
 	"github.com/badrootd/sei-tendermint/crypto/merkle"
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/types"
 )
@@ -203,9 +203,9 @@ func makeHeightSearchFunc(height int64) auto.SearchFunc {
 //---------------------------------------------------
 
 type Handshaker struct {
-	stateStore   sm.Store
-	initialState sm.State
-	store        sm.BlockStore
+	stateStore   state2.Store
+	initialState state2.State
+	store        state2.BlockStore
 	eventBus     *eventbus.EventBus
 	genDoc       *types.GenesisDoc
 	logger       log.Logger
@@ -215,9 +215,9 @@ type Handshaker struct {
 
 func NewHandshaker(
 	logger log.Logger,
-	stateStore sm.Store,
-	state sm.State,
-	store sm.BlockStore,
+	stateStore state2.Store,
+	state state2.State,
+	store state2.BlockStore,
 	eventBus *eventbus.EventBus,
 	genDoc *types.GenesisDoc,
 ) *Handshaker {
@@ -283,7 +283,7 @@ func (h *Handshaker) Handshake(ctx context.Context, appClient abciclient.Client)
 // Returns the final AppHash or an error.
 func (h *Handshaker) ReplayBlocks(
 	ctx context.Context,
-	state sm.State,
+	state state2.State,
 	appHash []byte,
 	appBlockHeight int64,
 	appClient abciclient.Client,
@@ -365,15 +365,15 @@ func (h *Handshaker) ReplayBlocks(
 
 	case appBlockHeight == 0 && state.InitialHeight < storeBlockBase:
 		// the app has no state, and the block store is truncated above the initial height
-		return appHash, sm.ErrAppBlockHeightTooLow{AppHeight: appBlockHeight, StoreBase: storeBlockBase}
+		return appHash, state2.ErrAppBlockHeightTooLow{AppHeight: appBlockHeight, StoreBase: storeBlockBase}
 
 	case appBlockHeight > 0 && appBlockHeight < storeBlockBase-1:
 		// the app is too far behind truncated store (can be 1 behind since we replay the next)
-		return appHash, sm.ErrAppBlockHeightTooLow{AppHeight: appBlockHeight, StoreBase: storeBlockBase}
+		return appHash, state2.ErrAppBlockHeightTooLow{AppHeight: appBlockHeight, StoreBase: storeBlockBase}
 
 	case storeBlockHeight < appBlockHeight:
 		// the app should never be ahead of the store (but this is under app's control)
-		return appHash, sm.ErrAppBlockHeightTooHigh{CoreHeight: storeBlockHeight, AppHeight: appBlockHeight}
+		return appHash, state2.ErrAppBlockHeightTooHigh{CoreHeight: storeBlockHeight, AppHeight: appBlockHeight}
 
 	case storeBlockHeight < stateBlockHeight:
 		// the state should never be ahead of the store (this is under tendermint's control)
@@ -455,7 +455,7 @@ func (h *Handshaker) ReplayBlocks(
 
 func (h *Handshaker) replayBlocks(
 	ctx context.Context,
-	state sm.State,
+	state state2.State,
 	appClient abciclient.Client,
 	appBlockHeight,
 	storeBlockHeight int64,
@@ -494,14 +494,14 @@ func (h *Handshaker) replayBlocks(
 		if i == finalBlock && !mutateState {
 			// We emit events for the index services at the final block due to the sync issue when
 			// the node shutdown during the block committing status.
-			blockExec := sm.NewBlockExecutor(h.stateStore, h.logger, appClient, emptyMempool{}, sm.EmptyEvidencePool{}, h.store, h.eventBus, sm.NopMetrics())
-			appHash, err = sm.ExecCommitBlock(ctx,
+			blockExec := state2.NewBlockExecutor(h.stateStore, h.logger, appClient, emptyMempool{}, state2.EmptyEvidencePool{}, h.store, h.eventBus, state2.NopMetrics())
+			appHash, err = state2.ExecCommitBlock(ctx,
 				blockExec, appClient, block, h.logger, h.stateStore, h.genDoc.InitialHeight, state)
 			if err != nil {
 				return nil, err
 			}
 		} else {
-			appHash, err = sm.ExecCommitBlock(ctx,
+			appHash, err = state2.ExecCommitBlock(ctx,
 				nil, appClient, block, h.logger, h.stateStore, h.genDoc.InitialHeight, state)
 			if err != nil {
 				return nil, err
@@ -528,21 +528,21 @@ func (h *Handshaker) replayBlocks(
 // ApplyBlock on the proxyApp with the last block.
 func (h *Handshaker) replayBlock(
 	ctx context.Context,
-	state sm.State,
+	state state2.State,
 	height int64,
 	appClient abciclient.Client,
-) (sm.State, error) {
+) (state2.State, error) {
 	block := h.store.LoadBlock(height)
 	meta := h.store.LoadBlockMeta(height)
 
 	// Use stubs for both mempool and evidence pool since no transactions nor
 	// evidence are needed here - block already exists.
-	blockExec := sm.NewBlockExecutor(h.stateStore, h.logger, appClient, emptyMempool{}, sm.EmptyEvidencePool{}, h.store, h.eventBus, sm.NopMetrics())
+	blockExec := state2.NewBlockExecutor(h.stateStore, h.logger, appClient, emptyMempool{}, state2.EmptyEvidencePool{}, h.store, h.eventBus, state2.NopMetrics())
 
 	var err error
 	state, err = blockExec.ApplyBlock(ctx, state, meta.BlockID, block, nil)
 	if err != nil {
-		return sm.State{}, err
+		return state2.State{}, err
 	}
 
 	h.nBlocks++
@@ -560,7 +560,7 @@ Block: %v`,
 	return nil
 }
 
-func checkAppHashEqualsOneFromState(appHash []byte, state sm.State) error {
+func checkAppHashEqualsOneFromState(appHash []byte, state state2.State) error {
 	if !bytes.Equal(appHash, state.AppHash) {
 		return fmt.Errorf(`state.AppHash does not match AppHash after replay. Got '%X', expected '%X'.
 

@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	sm "github.com/badrootd/sei-tendermint/state"
 	"math/rand"
 	"strings"
 	"sync"
@@ -13,7 +14,6 @@ import (
 	dbm "github.com/tendermint/tm-db"
 
 	"github.com/badrootd/sei-tendermint/internal/p2p"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	lightprovider "github.com/badrootd/sei-tendermint/light/provider"
 	lighthttp "github.com/badrootd/sei-tendermint/light/provider/http"

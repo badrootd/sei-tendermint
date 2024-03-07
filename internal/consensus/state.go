@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
 	"io"
 	"os"
 	"runtime/debug"
@@ -25,7 +26,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/jsontypes"
 	"github.com/badrootd/sei-tendermint/internal/libs/autofile"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	tmevents "github.com/badrootd/sei-tendermint/libs/events"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmmath "github.com/badrootd/sei-tendermint/libs/math"
@@ -126,13 +126,13 @@ type State struct {
 	privValidatorType types.PrivValidatorType
 
 	// store blocks and commits
-	blockStore sm.BlockStore
+	blockStore state2.BlockStore
 
-	stateStore        sm.Store
+	stateStore        state2.Store
 	skipBootstrapping bool
 
 	// create and execute blocks
-	blockExec *sm.BlockExecutor
+	blockExec *state2.BlockExecutor
 
 	// notify us if txs are available
 	txNotifier txNotifier
@@ -144,7 +144,7 @@ type State struct {
 	// internal state
 	mtx        sync.RWMutex
 	roundState cstypes.SafeRoundState
-	state      sm.State // State until height-1.
+	state      state2.State // State until height-1.
 	// privValidator pubkey, memoized for the duration of one block
 	// to avoid extra requests to HSM
 	privValidatorPubKey crypto.PubKey
@@ -207,9 +207,9 @@ func SkipStateStoreBootstrap(sm *State) {
 func NewState(
 	logger log.Logger,
 	cfg *config.ConsensusConfig,
-	store sm.Store,
-	blockExec *sm.BlockExecutor,
-	blockStore sm.BlockStore,
+	store state2.Store,
+	blockExec *state2.BlockExecutor,
+	blockStore state2.BlockStore,
 	txNotifier txNotifier,
 	evpool evidencePool,
 	eventBus *eventbus.EventBus,
@@ -303,7 +303,7 @@ func (cs *State) String() string {
 }
 
 // GetState returns a copy of the chain state.
-func (cs *State) GetState() sm.State {
+func (cs *State) GetState() state2.State {
 	cs.mtx.RLock()
 	defer cs.mtx.RUnlock()
 	return cs.state.Copy()
@@ -711,7 +711,7 @@ func (cs *State) sendInternalMessage(ctx context.Context, mi msgInfo) {
 // and ExtendedCommit are saved along with the block. If VoteExtensions are required
 // the method will panic on an absent ExtendedCommit or an ExtendedCommit without
 // extension data.
-func (cs *State) reconstructLastCommit(state sm.State) {
+func (cs *State) reconstructLastCommit(state state2.State) {
 	extensionsEnabled := cs.state.ConsensusParams.ABCI.VoteExtensionsEnabled(state.LastBlockHeight)
 	if !extensionsEnabled {
 		votes, err := cs.votesFromSeenCommit(state)
@@ -729,7 +729,7 @@ func (cs *State) reconstructLastCommit(state sm.State) {
 	cs.roundState.SetLastCommit(votes)
 }
 
-func (cs *State) votesFromExtendedCommit(state sm.State) (*types.VoteSet, error) {
+func (cs *State) votesFromExtendedCommit(state state2.State) (*types.VoteSet, error) {
 	ec := cs.blockStore.LoadBlockExtendedCommit(state.LastBlockHeight)
 	if ec == nil {
 		return nil, fmt.Errorf("extended commit for height %v not found", state.LastBlockHeight)
@@ -741,7 +741,7 @@ func (cs *State) votesFromExtendedCommit(state sm.State) (*types.VoteSet, error)
 	return vs, nil
 }
 
-func (cs *State) votesFromSeenCommit(state sm.State) (*types.VoteSet, error) {
+func (cs *State) votesFromSeenCommit(state state2.State) (*types.VoteSet, error) {
 	commit := cs.blockStore.LoadSeenCommit()
 	if commit == nil || commit.Height != state.LastBlockHeight {
 		commit = cs.blockStore.LoadBlockCommit(state.LastBlockHeight)
@@ -759,7 +759,7 @@ func (cs *State) votesFromSeenCommit(state sm.State) (*types.VoteSet, error) {
 
 // Updates State and increments height to match that of state.
 // The round becomes 0 and cs.Step becomes cstypes.RoundStepNewHeight.
-func (cs *State) updateToState(state sm.State) {
+func (cs *State) updateToState(state state2.State) {
 	if cs.roundState.CommitRound() > -1 && 0 < cs.roundState.Height() && cs.roundState.Height() != state.LastBlockHeight {
 		panic(fmt.Sprintf(
 			"updateToState() expected state height of %v but found %v",

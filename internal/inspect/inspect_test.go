@@ -3,6 +3,9 @@ package inspect_test
 import (
 	"context"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state/indexer"
+	indexermocks "github.com/badrootd/sei-tendermint/state/indexer/mocks"
+	"github.com/badrootd/sei-tendermint/state/mocks"
 	"net"
 	"os"
 	"runtime"
@@ -19,9 +22,6 @@ import (
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/inspect"
 	"github.com/badrootd/sei-tendermint/internal/pubsub/query"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	indexermocks "github.com/badrootd/sei-tendermint/internal/state/indexer/mocks"
-	statemocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	httpclient "github.com/badrootd/sei-tendermint/rpc/client/http"
 	"github.com/badrootd/sei-tendermint/types"
@@ -72,9 +72,9 @@ func TestBlock(t *testing.T) {
 	testBlock := new(types.Block)
 	testBlock.Header.Height = testHeight
 	testBlock.Header.LastCommitHash = []byte("test hash")
-	stateStoreMock := &statemocks.Store{}
+	stateStoreMock := &mocks.Store{}
 
-	blockStoreMock := &statemocks.BlockStore{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("Height").Return(testHeight)
 	blockStoreMock.On("Base").Return(int64(0))
 	blockStoreMock.On("LoadBlockMeta", testHeight).Return(&types.BlockMeta{})
@@ -121,8 +121,8 @@ func TestTxSearch(t *testing.T) {
 		Tx:     testTx,
 	}
 
-	stateStoreMock := &statemocks.Store{}
-	blockStoreMock := &statemocks.BlockStore{}
+	stateStoreMock := &mocks.Store{}
+	blockStoreMock := &mocks.BlockStore{}
 	eventSinkMock := &indexermocks.EventSink{}
 	eventSinkMock.On("Stop").Return(nil)
 	eventSinkMock.On("Type").Return(indexer.KV)
@@ -168,8 +168,8 @@ func TestTx(t *testing.T) {
 	testHash := []byte("test")
 	testTx := []byte("tx")
 
-	stateStoreMock := &statemocks.Store{}
-	blockStoreMock := &statemocks.BlockStore{}
+	stateStoreMock := &mocks.Store{}
+	blockStoreMock := &mocks.BlockStore{}
 	eventSinkMock := &indexermocks.EventSink{}
 	eventSinkMock.On("Stop").Return(nil)
 	eventSinkMock.On("Type").Return(indexer.KV)
@@ -212,8 +212,8 @@ func TestTx(t *testing.T) {
 func TestConsensusParams(t *testing.T) {
 	testHeight := int64(1)
 	testMaxGas := int64(55)
-	stateStoreMock := &statemocks.Store{}
-	blockStoreMock := &statemocks.BlockStore{}
+	stateStoreMock := &mocks.Store{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("Height").Return(testHeight)
 	blockStoreMock.On("Base").Return(int64(0))
 	stateStoreMock.On("LoadConsensusParams", testHeight).Return(types.ConsensusParams{
@@ -260,7 +260,7 @@ func TestConsensusParams(t *testing.T) {
 func TestBlockResults(t *testing.T) {
 	testHeight := int64(1)
 	testGasUsed := int64(100)
-	stateStoreMock := &statemocks.Store{}
+	stateStoreMock := &mocks.Store{}
 	//	tmstate "github.com/tendermint/tendermint/proto/tendermint/state"
 	stateStoreMock.On("LoadFinalizeBlockResponses", testHeight).Return(&abcitypes.ResponseFinalizeBlock{
 		TxResults: []*abcitypes.ExecTxResult{
@@ -269,7 +269,7 @@ func TestBlockResults(t *testing.T) {
 			},
 		},
 	}, nil)
-	blockStoreMock := &statemocks.BlockStore{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("Base").Return(int64(0))
 	blockStoreMock.On("Height").Return(testHeight)
 	eventSinkMock := &indexermocks.EventSink{}
@@ -311,8 +311,8 @@ func TestBlockResults(t *testing.T) {
 func TestCommit(t *testing.T) {
 	testHeight := int64(1)
 	testRound := int32(101)
-	stateStoreMock := &statemocks.Store{}
-	blockStoreMock := &statemocks.BlockStore{}
+	stateStoreMock := &mocks.Store{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("Base").Return(int64(0))
 	blockStoreMock.On("Height").Return(testHeight)
 	blockStoreMock.On("LoadBlockMeta", testHeight).Return(&types.BlockMeta{}, nil)
@@ -363,8 +363,8 @@ func TestBlockByHash(t *testing.T) {
 	testBlock := new(types.Block)
 	testBlock.Header.Height = testHeight
 	testBlock.Header.LastCommitHash = testHash
-	stateStoreMock := &statemocks.Store{}
-	blockStoreMock := &statemocks.BlockStore{}
+	stateStoreMock := &mocks.Store{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("LoadBlockMeta", testHeight).Return(&types.BlockMeta{
 		BlockID: types.BlockID{
 			Hash: testHash,
@@ -417,9 +417,9 @@ func TestBlockchain(t *testing.T) {
 	testBlockHash := []byte("test hash")
 	testBlock.Header.Height = testHeight
 	testBlock.Header.LastCommitHash = testBlockHash
-	stateStoreMock := &statemocks.Store{}
+	stateStoreMock := &mocks.Store{}
 
-	blockStoreMock := &statemocks.BlockStore{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("Height").Return(testHeight)
 	blockStoreMock.On("Base").Return(int64(0))
 	blockStoreMock.On("LoadBlockMeta", testHeight).Return(&types.BlockMeta{
@@ -474,10 +474,10 @@ func TestValidators(t *testing.T) {
 			},
 		},
 	}
-	stateStoreMock := &statemocks.Store{}
+	stateStoreMock := &mocks.Store{}
 	stateStoreMock.On("LoadValidators", testHeight).Return(&testValidators, nil)
 
-	blockStoreMock := &statemocks.BlockStore{}
+	blockStoreMock := &mocks.BlockStore{}
 	blockStoreMock.On("Height").Return(testHeight)
 	blockStoreMock.On("Base").Return(int64(0))
 	eventSinkMock := &indexermocks.EventSink{}
@@ -524,9 +524,9 @@ func TestBlockSearch(t *testing.T) {
 	testHeight := int64(1)
 	testBlockHash := []byte("test hash")
 	testQuery := "block.height = 1"
-	stateStoreMock := &statemocks.Store{}
+	stateStoreMock := &mocks.Store{}
 
-	blockStoreMock := &statemocks.BlockStore{}
+	blockStoreMock := &mocks.BlockStore{}
 	eventSinkMock := &indexermocks.EventSink{}
 	eventSinkMock.On("Stop").Return(nil)
 	eventSinkMock.On("Type").Return(indexer.KV)

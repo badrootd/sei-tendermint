@@ -4,6 +4,9 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state"
+	"github.com/badrootd/sei-tendermint/state/indexer"
+	"github.com/badrootd/sei-tendermint/statesync"
 	"net"
 	"net/http"
 	"time"
@@ -21,9 +24,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
 	"github.com/badrootd/sei-tendermint/internal/pubsub/query"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/statesync"
 	tmjson "github.com/badrootd/sei-tendermint/libs/json"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/strings"
@@ -50,7 +50,7 @@ const (
 // These interfaces are used by RPC and must be thread safe
 
 type consensusState interface {
-	GetState() sm.State
+	GetState() state.State
 	GetValidators() (int64, []*types.Validator)
 	GetLastHeight() int64
 	GetRoundStateJSON() ([]byte, error)
@@ -72,9 +72,9 @@ type Environment struct {
 	ProxyApp abciclient.Client
 
 	// interfaces defined in types and above
-	StateStore       sm.Store
-	BlockStore       sm.BlockStore
-	EvidencePool     sm.EvidencePool
+	StateStore       state.Store
+	BlockStore       state.BlockStore
+	EvidencePool     state.EvidencePool
 	ConsensusState   consensusState
 	ConsensusReactor *consensus.Reactor
 	BlockSyncReactor *blocksync.Reactor

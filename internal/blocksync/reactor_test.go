@@ -2,6 +2,8 @@ package blocksync
 
 import (
 	"context"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	sf "github.com/badrootd/sei-tendermint/state/test/factory"
 	"github.com/badrootd/sei-tendermint/store"
 	"os"
 	"testing"
@@ -24,8 +26,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/p2p"
 	"github.com/badrootd/sei-tendermint/internal/p2p/p2ptest"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	sf "github.com/badrootd/sei-tendermint/internal/state/test/factory"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	bcproto "github.com/badrootd/sei-tendermint/proto/tendermint/blocksync"
@@ -118,10 +118,10 @@ func makeReactor(
 
 	blockDB := dbm.NewMemDB()
 	stateDB := dbm.NewMemDB()
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 	blockStore := store.NewBlockStore(blockDB)
 
-	state, err := sm.MakeGenesisState(genDoc)
+	state, err := state2.MakeGenesisState(genDoc)
 	require.NoError(t, err)
 	require.NoError(t, stateStore.Save(state))
 	mp := &mpmocks.Mempool{}
@@ -141,15 +141,15 @@ func makeReactor(
 	eventbus := eventbus.NewDefault(logger)
 	require.NoError(t, eventbus.Start(ctx))
 
-	blockExec := sm.NewBlockExecutor(
+	blockExec := state2.NewBlockExecutor(
 		stateStore,
 		log.NewNopLogger(),
 		app,
 		mp,
-		sm.EmptyEvidencePool{},
+		state2.EmptyEvidencePool{},
 		blockStore,
 		eventbus,
-		sm.NopMetrics(),
+		state2.NopMetrics(),
 	)
 
 	return NewReactor(
@@ -232,7 +232,7 @@ func (rts *reactorTestSuite) addNode(
 
 func makeNextBlock(ctx context.Context,
 	t *testing.T,
-	state sm.State,
+	state state2.State,
 	signer types.PrivValidator,
 	height int64,
 	lc *types.ExtendedCommit) (*types.Block, types.BlockID, *types.PartSet, *types.ExtendedCommit) {
@@ -346,7 +346,7 @@ func TestReactor_SyncTime(t *testing.T) {
 
 type MockBlockStore struct {
 	mock.Mock
-	sm.BlockStore
+	state2.BlockStore
 }
 
 func (m *MockBlockStore) Height() int64 {

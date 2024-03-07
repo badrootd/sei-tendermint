@@ -4,6 +4,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	"github.com/badrootd/sei-tendermint/state/indexer/sink"
 	"net/http"
 	"strings"
 	"time"
@@ -15,8 +17,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/p2p/pex"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	rpccore "github.com/badrootd/sei-tendermint/internal/rpc/core"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/service"
 	tmtime "github.com/badrootd/sei-tendermint/libs/time"
@@ -69,7 +69,7 @@ func makeSeedNode(
 		return nil, err
 	}
 
-	state, err := sm.MakeGenesisState(genDoc)
+	state, err := state2.MakeGenesisState(genDoc)
 	if err != nil {
 		return nil, err
 	}
@@ -133,7 +133,7 @@ func makeSeedNode(
 	}
 	eventBus := eventbus.NewDefault(logger.With("module", "events"))
 
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 
 	node := &seedNodeImpl{
 		config:     cfg,

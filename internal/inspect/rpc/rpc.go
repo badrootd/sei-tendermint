@@ -2,6 +2,8 @@ package rpc
 
 import (
 	"context"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	"github.com/badrootd/sei-tendermint/state/indexer"
 	"net/http"
 	"time"
 
@@ -10,8 +12,6 @@ import (
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/pubsub"
 	"github.com/badrootd/sei-tendermint/internal/rpc/core"
-	"github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/rpc/jsonrpc/server"
 )
@@ -29,7 +29,7 @@ type eventBusUnsubscriber interface {
 }
 
 // Routes returns the set of routes used by the Inspector server.
-func Routes(cfg config.RPCConfig, s state.Store, bs state.BlockStore, es []indexer.EventSink, logger log.Logger) core.RoutesMap {
+func Routes(cfg config.RPCConfig, s state2.Store, bs state2.BlockStore, es []indexer.EventSink, logger log.Logger) core.RoutesMap {
 	env := &core.Environment{
 		Config:     cfg,
 		EventSinks: es,

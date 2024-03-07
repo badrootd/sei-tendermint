@@ -2,6 +2,9 @@ package evidence_test
 
 import (
 	"context"
+	"github.com/badrootd/sei-tendermint/state"
+	smmocks "github.com/badrootd/sei-tendermint/state/mocks"
+	sf "github.com/badrootd/sei-tendermint/state/test/factory"
 	"github.com/badrootd/sei-tendermint/store"
 	"testing"
 	"time"
@@ -15,9 +18,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/evidence"
 	"github.com/badrootd/sei-tendermint/internal/evidence/mocks"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	smmocks "github.com/badrootd/sei-tendermint/internal/state/mocks"
-	sf "github.com/badrootd/sei-tendermint/internal/state/test/factory"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/types"
@@ -34,7 +34,7 @@ var (
 	defaultEvidenceMaxBytes int64 = 1000
 )
 
-func startPool(t *testing.T, pool *evidence.Pool, store sm.Store) {
+func startPool(t *testing.T, pool *evidence.Pool, store state.Store) {
 	t.Helper()
 	state, err := store.Load()
 	if err != nil {
@@ -385,7 +385,7 @@ func TestLightClientAttackEvidenceLifecycle(t *testing.T) {
 	ev, trusted, common := makeLunaticEvidence(ctx, t, height, commonHeight,
 		10, 5, 5, defaultEvidenceTime, defaultEvidenceTime.Add(1*time.Hour))
 
-	state := sm.State{
+	state := state.State{
 		LastBlockTime:   defaultEvidenceTime.Add(2 * time.Hour),
 		LastBlockHeight: 110,
 		ConsensusParams: *types.DefaultConsensusParams(),
@@ -490,7 +490,7 @@ func TestRecoverPendingEvidence(t *testing.T) {
 
 	// now recover from the previous pool at a different time
 	newStateStore := &smmocks.Store{}
-	newStateStore.On("Load").Return(sm.State{
+	newStateStore.On("Load").Return(state.State{
 		LastBlockTime:   defaultEvidenceTime.Add(25 * time.Minute),
 		LastBlockHeight: height + 15,
 		ConsensusParams: types.ConsensusParams{
@@ -515,10 +515,10 @@ func TestRecoverPendingEvidence(t *testing.T) {
 	require.Equal(t, goodEvidence, next.Value.(types.Evidence))
 }
 
-func initializeStateFromValidatorSet(t *testing.T, valSet *types.ValidatorSet, height int64) sm.Store {
+func initializeStateFromValidatorSet(t *testing.T, valSet *types.ValidatorSet, height int64) state.Store {
 	stateDB := dbm.NewMemDB()
-	stateStore := sm.NewStore(stateDB)
-	state := sm.State{
+	stateStore := state.NewStore(stateDB)
+	state := state.State{
 		ChainID:                     evidenceChainID,
 		InitialHeight:               1,
 		LastBlockHeight:             height,
@@ -549,7 +549,7 @@ func initializeStateFromValidatorSet(t *testing.T, valSet *types.ValidatorSet, h
 	return stateStore
 }
 
-func initializeValidatorState(ctx context.Context, t *testing.T, privVal types.PrivValidator, height int64) sm.Store {
+func initializeValidatorState(ctx context.Context, t *testing.T, privVal types.PrivValidator, height int64) state.Store {
 	pubKey, _ := privVal.GetPubKey(ctx)
 	validator := &types.Validator{Address: pubKey.Address(), VotingPower: 10, PubKey: pubKey}
 
@@ -564,7 +564,7 @@ func initializeValidatorState(ctx context.Context, t *testing.T, privVal types.P
 
 // initializeBlockStore creates a block storage and populates it w/ a dummy
 // block at +height+.
-func initializeBlockStore(db dbm.DB, state sm.State, valAddr []byte) (*store.BlockStore, error) {
+func initializeBlockStore(db dbm.DB, state state.State, valAddr []byte) (*store.BlockStore, error) {
 	blockStore := store.NewBlockStore(db)
 
 	for i := int64(1); i <= state.LastBlockHeight; i++ {
@@ -622,8 +622,8 @@ func defaultTestPool(ctx context.Context, t *testing.T, height int64) (*evidence
 	return pool, val, eventBus
 }
 
-func createState(height int64, valSet *types.ValidatorSet) sm.State {
-	return sm.State{
+func createState(height int64, valSet *types.ValidatorSet) state.State {
+	return state.State{
 		ChainID:         evidenceChainID,
 		LastBlockHeight: height,
 		LastBlockTime:   defaultEvidenceTime,

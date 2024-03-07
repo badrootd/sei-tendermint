@@ -4,12 +4,12 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state/indexer"
 	"math/rand"
 	"time"
 
 	abci "github.com/badrootd/sei-tendermint/abci/types"
 	"github.com/badrootd/sei-tendermint/internal/mempool"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	tmmath "github.com/badrootd/sei-tendermint/libs/math"
 	"github.com/badrootd/sei-tendermint/rpc/coretypes"
 )

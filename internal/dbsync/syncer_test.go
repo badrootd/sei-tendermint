@@ -3,15 +3,15 @@ package dbsync
 import (
 	"context"
 	"crypto/md5"
+	"github.com/badrootd/sei-tendermint/state"
 	"testing"
 	"time"
 
-	"github.com/stretchr/testify/require"
 	"github.com/badrootd/sei-tendermint/config"
-	"github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/proto/tendermint/dbsync"
 	"github.com/badrootd/sei-tendermint/types"
+	"github.com/stretchr/testify/require"
 )
 
 func getTestSyncer(t *testing.T) *Syncer {

@@ -3,9 +3,8 @@
 package mocks
 
 import (
+	"github.com/badrootd/sei-tendermint/state"
 	mock "github.com/stretchr/testify/mock"
-
-	state "github.com/badrootd/sei-tendermint/internal/state"
 
 	time "time"
 )

@@ -3,6 +3,8 @@ package commands
 import (
 	"context"
 	"errors"
+	"github.com/badrootd/sei-tendermint/state/indexer"
+	mocks2 "github.com/badrootd/sei-tendermint/state/mocks"
 	"testing"
 
 	"github.com/spf13/cobra"
@@ -13,8 +15,6 @@ import (
 
 	abcitypes "github.com/badrootd/sei-tendermint/abci/types"
 	"github.com/badrootd/sei-tendermint/config"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/state/mocks"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/types"
 
@@ -40,7 +40,7 @@ func setupReIndexEventCmd(ctx context.Context, conf *config.Config, logger log.L
 }
 
 func TestReIndexEventCheckHeight(t *testing.T) {
-	mockBlockStore := &mocks.BlockStore{}
+	mockBlockStore := &mocks2.BlockStore{}
 	mockBlockStore.
 		On("Base").Return(base).
 		On("Height").Return(height)
@@ -134,9 +134,9 @@ func TestLoadBlockStore(t *testing.T) {
 }
 
 func TestReIndexEvent(t *testing.T) {
-	mockBlockStore := &mocks.BlockStore{}
-	mockStateStore := &mocks.Store{}
-	mockEventSink := &mocks.EventSink{}
+	mockBlockStore := &mocks2.BlockStore{}
+	mockStateStore := &mocks2.Store{}
+	mockEventSink := &mocks2.EventSink{}
 
 	mockBlockStore.
 		On("Base").Return(base).

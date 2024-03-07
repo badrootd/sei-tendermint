@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
 	"github.com/badrootd/sei-tendermint/store"
 	"io"
 	"os"
@@ -18,7 +19,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	tmpubsub "github.com/badrootd/sei-tendermint/internal/pubsub"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/types"
 )
@@ -128,10 +128,10 @@ type playback struct {
 
 	// replays can be reset to beginning
 	fileName   string // so we can close/reopen the file
-	stateStore sm.Store
+	stateStore state2.Store
 }
 
-func newPlayback(fileName string, fp *os.File, cs *State, store sm.Store) *playback {
+func newPlayback(fileName string, fp *os.File, cs *State, store state2.Store) *playback {
 	return &playback{
 		cs:         cs,
 		fp:         fp,
@@ -315,13 +315,13 @@ func newConsensusStateForReplay(
 		return nil, err
 	}
 
-	stateStore := sm.NewStore(stateDB)
-	gdoc, err := sm.MakeGenesisDocFromFile(cfg.GenesisFile())
+	stateStore := state2.NewStore(stateDB)
+	gdoc, err := state2.MakeGenesisDocFromFile(cfg.GenesisFile())
 	if err != nil {
 		return nil, err
 	}
 
-	state, err := sm.MakeGenesisState(gdoc)
+	state, err := state2.MakeGenesisState(gdoc)
 	if err != nil {
 		return nil, err
 	}
@@ -348,8 +348,8 @@ func newConsensusStateForReplay(
 		return nil, err
 	}
 
-	mempool, evpool := emptyMempool{}, sm.EmptyEvidencePool{}
-	blockExec := sm.NewBlockExecutor(stateStore, logger, proxyApp, mempool, evpool, blockStore, eventBus, sm.NopMetrics())
+	mempool, evpool := emptyMempool{}, state2.EmptyEvidencePool{}
+	blockExec := state2.NewBlockExecutor(stateStore, logger, proxyApp, mempool, evpool, blockStore, eventBus, state2.NopMetrics())
 
 	consensusState, err := NewState(logger, csConfig, stateStore, blockExec,
 		blockStore, mempool, evpool, eventBus, []trace.TracerProviderOption{})

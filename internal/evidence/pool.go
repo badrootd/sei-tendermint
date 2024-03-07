@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -16,7 +17,6 @@ import (
 
 	"github.com/badrootd/sei-tendermint/internal/eventbus"
 	clist "github.com/badrootd/sei-tendermint/internal/libs/clist"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmproto "github.com/badrootd/sei-tendermint/proto/tendermint/types"
 	"github.com/badrootd/sei-tendermint/types"
@@ -48,11 +48,11 @@ type Pool struct {
 
 	// needed to load headers and commits to verify evidence
 	blockStore BlockStore
-	stateDB    sm.Store
+	stateDB    state2.Store
 
 	mtx sync.Mutex
 	// latest state
-	state     sm.State
+	state     state2.State
 	isStarted bool
 	// evidence from consensus is buffered to this slice, awaiting until the next height
 	// before being flushed to the pool. This prevents broadcasting and proposing of
@@ -72,7 +72,7 @@ type Pool struct {
 
 // NewPool creates an evidence pool. If using an existing evidence store,
 // it will add all pending evidence to the concurrent list.
-func NewPool(logger log.Logger, evidenceDB dbm.DB, stateStore sm.Store, blockStore BlockStore, metrics *Metrics, eventBus *eventbus.EventBus) *Pool {
+func NewPool(logger log.Logger, evidenceDB dbm.DB, stateStore state2.Store, blockStore BlockStore, metrics *Metrics, eventBus *eventbus.EventBus) *Pool {
 	return &Pool{
 		blockStore:      blockStore,
 		stateDB:         stateStore,
@@ -102,12 +102,12 @@ func (evpool *Pool) PendingEvidence(maxBytes int64) ([]types.Evidence, int64) {
 
 // Update takes both the new state and the evidence committed at that height and performs
 // the following operations:
-// 1. Take any conflicting votes from consensus and use the state's LastBlockTime to form
-//    DuplicateVoteEvidence and add it to the pool.
-// 2. Update the pool's state which contains evidence params relating to expiry.
-// 3. Moves pending evidence that has now been committed into the committed pool.
-// 4. Removes any expired evidence based on both height and time.
-func (evpool *Pool) Update(ctx context.Context, state sm.State, ev types.EvidenceList) {
+//  1. Take any conflicting votes from consensus and use the state's LastBlockTime to form
+//     DuplicateVoteEvidence and add it to the pool.
+//  2. Update the pool's state which contains evidence params relating to expiry.
+//  3. Moves pending evidence that has now been committed into the committed pool.
+//  4. Removes any expired evidence based on both height and time.
+func (evpool *Pool) Update(ctx context.Context, state state2.State, ev types.EvidenceList) {
 	// sanity check
 	if state.LastBlockHeight <= evpool.state.LastBlockHeight {
 		panic(fmt.Sprintf(
@@ -254,13 +254,13 @@ func (evpool *Pool) Size() uint32 {
 }
 
 // State returns the current state of the evpool.
-func (evpool *Pool) State() sm.State {
+func (evpool *Pool) State() state2.State {
 	evpool.mtx.Lock()
 	defer evpool.mtx.Unlock()
 	return evpool.state
 }
 
-func (evpool *Pool) Start(state sm.State) error {
+func (evpool *Pool) Start(state state2.State) error {
 	if evpool.isStarted {
 		return errors.New("pool is already running")
 	}
@@ -539,7 +539,7 @@ func (evpool *Pool) removeEvidenceFromList(
 	}
 }
 
-func (evpool *Pool) updateState(state sm.State) {
+func (evpool *Pool) updateState(state state2.State) {
 	evpool.mtx.Lock()
 	defer evpool.mtx.Unlock()
 	evpool.state = state
@@ -549,7 +549,7 @@ func (evpool *Pool) updateState(state sm.State) {
 // into DuplicateVoteEvidence. It sets the evidence timestamp to the block height
 // from the most recently committed block.
 // Evidence is then added to the pool so as to be ready to be broadcasted and proposed.
-func (evpool *Pool) processConsensusBuffer(ctx context.Context, state sm.State) {
+func (evpool *Pool) processConsensusBuffer(ctx context.Context, state state2.State) {
 	evpool.mtx.Lock()
 	defer evpool.mtx.Unlock()
 	for _, voteSet := range evpool.consensusBuffer {

@@ -3,6 +3,10 @@ package commands
 import (
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	indexer2 "github.com/badrootd/sei-tendermint/state/indexer"
+	"github.com/badrootd/sei-tendermint/state/indexer/sink/kv"
+	"github.com/badrootd/sei-tendermint/state/indexer/sink/psql"
 	"github.com/badrootd/sei-tendermint/store"
 	"path/filepath"
 	"strings"
@@ -13,10 +17,6 @@ import (
 	abcitypes "github.com/badrootd/sei-tendermint/abci/types"
 	tmcfg "github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/internal/libs/progressbar"
-	"github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink/kv"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink/psql"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/os"
 	"github.com/badrootd/sei-tendermint/rpc/coretypes"
@@ -91,7 +91,7 @@ either or both arguments.
 	return cmd
 }
 
-func loadEventSinks(cfg *tmcfg.Config) ([]indexer.EventSink, error) {
+func loadEventSinks(cfg *tmcfg.Config) ([]indexer2.EventSink, error) {
 	// Check duplicated sinks.
 	sinks := map[string]bool{}
 	for _, s := range cfg.TxIndex.Indexer {
@@ -102,19 +102,19 @@ func loadEventSinks(cfg *tmcfg.Config) ([]indexer.EventSink, error) {
 		sinks[sl] = true
 	}
 
-	eventSinks := []indexer.EventSink{}
+	eventSinks := []indexer2.EventSink{}
 
 	for k := range sinks {
 		switch k {
-		case string(indexer.NULL):
+		case string(indexer2.NULL):
 			return nil, errors.New("found null event sink, please check the tx-index section in the config.toml")
-		case string(indexer.KV):
+		case string(indexer2.KV):
 			store, err := tmcfg.DefaultDBProvider(&tmcfg.DBContext{ID: "tx_index", Config: cfg})
 			if err != nil {
 				return nil, err
 			}
 			eventSinks = append(eventSinks, kv.NewEventSink(store))
-		case string(indexer.PSQL):
+		case string(indexer2.PSQL):
 			conn := cfg.TxIndex.PsqlConn
 			if conn == "" {
 				return nil, errors.New("the psql connection settings cannot be empty")
@@ -134,14 +134,14 @@ func loadEventSinks(cfg *tmcfg.Config) ([]indexer.EventSink, error) {
 			" please check the tx-index section in the config.toml")
 	}
 
-	if !indexer.IndexingEnabled(eventSinks) {
+	if !indexer2.IndexingEnabled(eventSinks) {
 		return nil, fmt.Errorf("no event sink has been enabled")
 	}
 
 	return eventSinks, nil
 }
 
-func loadStateAndBlockStore(cfg *tmcfg.Config) (*store.BlockStore, state.Store, error) {
+func loadStateAndBlockStore(cfg *tmcfg.Config) (*store.BlockStore, state2.Store, error) {
 	dbType := dbm.BackendType(cfg.DBBackend)
 
 	if !os.FileExists(filepath.Join(cfg.DBDir(), "blockstore.db")) {
@@ -164,7 +164,7 @@ func loadStateAndBlockStore(cfg *tmcfg.Config) (*store.BlockStore, state.Store, 
 	if err != nil {
 		return nil, nil, err
 	}
-	stateStore := state.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 
 	return blockStore, stateStore, nil
 }
@@ -172,9 +172,9 @@ func loadStateAndBlockStore(cfg *tmcfg.Config) (*store.BlockStore, state.Store, 
 type eventReIndexArgs struct {
 	startHeight int64
 	endHeight   int64
-	sinks       []indexer.EventSink
-	blockStore  state.BlockStore
-	stateStore  state.Store
+	sinks       []indexer2.EventSink
+	blockStore  state2.BlockStore
+	stateStore  state2.Store
 }
 
 func eventReIndex(cmd *cobra.Command, args eventReIndexArgs) error {
@@ -204,9 +204,9 @@ func eventReIndex(cmd *cobra.Command, args eventReIndexArgs) error {
 				ResultFinalizeBlock: *r,
 			}
 
-			var batch *indexer.Batch
+			var batch *indexer2.Batch
 			if e.NumTxs > 0 {
-				batch = indexer.NewBatch(e.NumTxs)
+				batch = indexer2.NewBatch(e.NumTxs)
 
 				for i := range b.Data.Txs {
 					tr := abcitypes.TxResult{
@@ -244,7 +244,7 @@ type checkValidHeightArgs struct {
 	endHeight   int64
 }
 
-func checkValidHeight(bs state.BlockStore, args checkValidHeightArgs) error {
+func checkValidHeight(bs state2.BlockStore, args checkValidHeightArgs) error {
 	base := bs.Base()
 
 	if args.startHeight == 0 {

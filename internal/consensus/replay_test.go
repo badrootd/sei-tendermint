@@ -5,6 +5,8 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state"
+	sf "github.com/badrootd/sei-tendermint/state/test/factory"
 	"github.com/badrootd/sei-tendermint/store"
 	"io"
 	"math/rand"
@@ -29,8 +31,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/mempool"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	"github.com/badrootd/sei-tendermint/internal/pubsub"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	sf "github.com/badrootd/sei-tendermint/internal/state/test/factory"
 	"github.com/badrootd/sei-tendermint/internal/test/factory"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
@@ -55,9 +55,9 @@ import (
 // wal writer when we need to, instead of with every message.
 
 func startNewStateAndWaitForBlock(ctx context.Context, t *testing.T, consensusReplayConfig *config.Config,
-	lastBlockHeight int64, blockDB dbm.DB, stateStore sm.Store) {
+	lastBlockHeight int64, blockDB dbm.DB, stateStore state.Store) {
 	logger := log.NewNopLogger()
-	state, err := sm.MakeGenesisStateFromFile(consensusReplayConfig.GenesisFile())
+	state, err := state.MakeGenesisStateFromFile(consensusReplayConfig.GenesisFile())
 	require.NoError(t, err)
 	privValidator := loadPrivValidator(t, consensusReplayConfig)
 	blockStore := store.NewBlockStore(dbm.NewMemDB())
@@ -158,9 +158,9 @@ LOOP:
 		logger := log.NewNopLogger()
 		blockDB := dbm.NewMemDB()
 		stateDB := dbm.NewMemDB()
-		stateStore := sm.NewStore(stateDB)
+		stateStore := state.NewStore(stateDB)
 		blockStore := store.NewBlockStore(blockDB)
-		state, err := sm.MakeGenesisStateFromFile(consensusReplayConfig.GenesisFile())
+		state, err := state.MakeGenesisStateFromFile(consensusReplayConfig.GenesisFile())
 		require.NoError(t, err)
 		privValidator := loadPrivValidator(t, consensusReplayConfig)
 		cs := newStateWithConfigAndBlockStore(
@@ -294,14 +294,14 @@ func (w *crashingWAL) Wait()                           { w.next.Wait() }
 
 // ------------------------------------------------------------------------------------------
 type simulatorTestSuite struct {
-	GenesisState sm.State
+	GenesisState state.State
 	Config       *config.Config
 	Chain        []*types.Block
 	ExtCommits   []*types.ExtendedCommit
 	CleanupFunc  cleanupFunc
 
 	Mempool mempool.Mempool
-	Evpool  sm.EvidencePool
+	Evpool  state.EvidencePool
 }
 
 const (
@@ -324,7 +324,7 @@ func setupSimulator(ctx context.Context, t *testing.T) *simulatorTestSuite {
 
 	sim := &simulatorTestSuite{
 		Mempool: emptyMempool{},
-		Evpool:  sm.EmptyEvidencePool{},
+		Evpool:  state.EmptyEvidencePool{},
 	}
 
 	nPeers := 7
@@ -343,7 +343,7 @@ func setupSimulator(ctx context.Context, t *testing.T) *simulatorTestSuite {
 	defer func() { t.Cleanup(cleanup) }()
 
 	var err error
-	sim.GenesisState, err = sm.MakeGenesisState(genDoc)
+	sim.GenesisState, err = state.MakeGenesisState(genDoc)
 	require.NoError(t, err)
 
 	partSize := types.BlockPartSizeBytes
@@ -688,7 +688,7 @@ func testHandshakeReplay(
 	var extCommits []*types.ExtendedCommit
 	var store *mockBlockStore
 	var stateDB dbm.DB
-	var genesisState sm.State
+	var genesisState state.State
 
 	ctx, cancel := context.WithCancel(rctx)
 	t.Cleanup(cancel)
@@ -730,7 +730,7 @@ func testHandshakeReplay(
 		stateDB, genesisState, store = stateAndStore(t, cfg, pubKey, kvstore.ProtocolVersion)
 
 	}
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state.NewStore(stateDB)
 	store.chain = chain
 	store.extCommits = extCommits
 
@@ -761,7 +761,7 @@ func testHandshakeReplay(
 		// use a throwaway tendermint state
 		proxyApp := proxy.New(client, logger, proxy.NopMetrics())
 		stateDB1 := dbm.NewMemDB()
-		stateStore := sm.NewStore(stateDB1)
+		stateStore := state.NewStore(stateDB1)
 		err := stateStore.Save(genesisState)
 		require.NoError(t, err)
 		buildAppStateFromChain(ctx, t, proxyApp, stateStore, sim.Mempool, sim.Evpool, genesisState, chain, eventBus, nBlocks, mode, store)
@@ -777,7 +777,7 @@ func testHandshakeReplay(
 	}
 
 	// now start the app using the handshake - it should sync
-	genDoc, err := sm.MakeGenesisDocFromFile(cfg.GenesisFile())
+	genDoc, err := state.MakeGenesisDocFromFile(cfg.GenesisFile())
 	require.NoError(t, err)
 	handshaker := NewHandshaker(logger, stateStore, state, store, eventBus, genDoc)
 	proxyApp := proxy.New(client, logger, proxy.NopMetrics())
@@ -822,17 +822,17 @@ func testHandshakeReplay(
 func applyBlock(
 	ctx context.Context,
 	t *testing.T,
-	stateStore sm.Store,
+	stateStore state.Store,
 	mempool mempool.Mempool,
-	evpool sm.EvidencePool,
-	st sm.State,
+	evpool state.EvidencePool,
+	st state.State,
 	blk *types.Block,
 	appClient abciclient.Client,
 	blockStore *mockBlockStore,
 	eventBus *eventbus.EventBus,
-) sm.State {
+) state.State {
 	testPartSize := types.BlockPartSizeBytes
-	blockExec := sm.NewBlockExecutor(stateStore, log.NewNopLogger(), appClient, mempool, evpool, blockStore, eventBus, sm.NopMetrics())
+	blockExec := state.NewBlockExecutor(stateStore, log.NewNopLogger(), appClient, mempool, evpool, blockStore, eventBus, state.NopMetrics())
 
 	bps, err := blk.MakePartSet(testPartSize)
 	require.NoError(t, err)
@@ -846,10 +846,10 @@ func buildAppStateFromChain(
 	ctx context.Context,
 	t *testing.T,
 	appClient abciclient.Client,
-	stateStore sm.Store,
+	stateStore state.Store,
 	mempool mempool.Mempool,
-	evpool sm.EvidencePool,
-	state sm.State,
+	evpool state.EvidencePool,
+	state state.State,
 	chain []*types.Block,
 	eventBus *eventbus.EventBus,
 	nBlocks int,
@@ -898,14 +898,14 @@ func buildTMStateFromChain(
 	cfg *config.Config,
 	logger log.Logger,
 	mempool mempool.Mempool,
-	evpool sm.EvidencePool,
-	stateStore sm.Store,
-	state sm.State,
+	evpool state.EvidencePool,
+	stateStore state.Store,
+	state state.State,
 	chain []*types.Block,
 	nBlocks int,
 	mode uint,
 	blockStore *mockBlockStore,
-) sm.State {
+) state.State {
 	t.Helper()
 
 	// run the whole chain against this client to build up the tendermint state
@@ -968,8 +968,8 @@ func TestHandshakeErrorsIfAppReturnsWrongAppHash(t *testing.T) {
 	pubKey, err := privVal.GetPubKey(ctx)
 	require.NoError(t, err)
 	stateDB, state, store := stateAndStore(t, cfg, pubKey, appVersion)
-	stateStore := sm.NewStore(stateDB)
-	genDoc, err := sm.MakeGenesisDocFromFile(cfg.GenesisFile())
+	stateStore := state.NewStore(stateDB)
+	genDoc, err := state.MakeGenesisDocFromFile(cfg.GenesisFile())
 	require.NoError(t, err)
 	state.LastValidators = state.Validators.Copy()
 	// mode = 0 for committing all the blocks
@@ -1156,10 +1156,10 @@ func stateAndStore(
 	cfg *config.Config,
 	pubKey crypto.PubKey,
 	appVersion uint64,
-) (dbm.DB, sm.State, *mockBlockStore) {
+) (dbm.DB, state.State, *mockBlockStore) {
 	stateDB := dbm.NewMemDB()
-	stateStore := sm.NewStore(stateDB)
-	state, err := sm.MakeGenesisStateFromFile(cfg.GenesisFile())
+	stateStore := state.NewStore(stateDB)
+	state, err := state.MakeGenesisStateFromFile(cfg.GenesisFile())
 	require.NoError(t, err)
 	state.Version.Consensus.App = appVersion
 	store := newMockBlockStore(t, cfg, state.ConsensusParams)
@@ -1180,7 +1180,7 @@ type mockBlockStore struct {
 	t          *testing.T
 }
 
-var _ sm.BlockStore = &mockBlockStore{}
+var _ state.BlockStore = &mockBlockStore{}
 
 // TODO: NewBlockStore(db.NewMemDB) ...
 func newMockBlockStore(t *testing.T, cfg *config.Config, params types.ConsensusParams) *mockBlockStore {
@@ -1267,12 +1267,12 @@ func TestHandshakeUpdatesValidators(t *testing.T) {
 	pubKey, err := privVal.GetPubKey(ctx)
 	require.NoError(t, err)
 	stateDB, state, store := stateAndStore(t, cfg, pubKey, 0x0)
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state.NewStore(stateDB)
 
 	oldValAddr := state.Validators.Validators[0].Address
 
 	// now start the app using the handshake - it should sync
-	genDoc, err := sm.MakeGenesisDocFromFile(cfg.GenesisFile())
+	genDoc, err := state.MakeGenesisDocFromFile(cfg.GenesisFile())
 	require.NoError(t, err)
 
 	handshaker := NewHandshaker(logger, stateStore, state, store, eventBus, genDoc)

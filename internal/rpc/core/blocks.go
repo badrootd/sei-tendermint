@@ -3,10 +3,10 @@ package core
 import (
 	"context"
 	"fmt"
+	indexer2 "github.com/badrootd/sei-tendermint/state/indexer"
 	"sort"
 
 	tmquery "github.com/badrootd/sei-tendermint/internal/pubsub/query"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
 	tmmath "github.com/badrootd/sei-tendermint/libs/math"
 	"github.com/badrootd/sei-tendermint/rpc/coretypes"
 	"github.com/badrootd/sei-tendermint/types"
@@ -209,7 +209,7 @@ func (env *Environment) BlockResults(ctx context.Context, req *coretypes.Request
 
 // BlockSearch searches for a paginated set of blocks matching the provided query.
 func (env *Environment) BlockSearch(ctx context.Context, req *coretypes.RequestBlockSearch) (*coretypes.ResultBlockSearch, error) {
-	if !indexer.KVSinkEnabled(env.EventSinks) {
+	if !indexer2.KVSinkEnabled(env.EventSinks) {
 		return nil, fmt.Errorf("block searching is disabled due to no kvEventSink")
 	}
 
@@ -218,9 +218,9 @@ func (env *Environment) BlockSearch(ctx context.Context, req *coretypes.RequestB
 		return nil, err
 	}
 
-	var kvsink indexer.EventSink
+	var kvsink indexer2.EventSink
 	for _, sink := range env.EventSinks {
-		if sink.Type() == indexer.KV {
+		if sink.Type() == indexer2.KV {
 			kvsink = sink
 		}
 	}

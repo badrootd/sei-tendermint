@@ -2,6 +2,8 @@ package store
 
 import (
 	"fmt"
+	sm "github.com/badrootd/sei-tendermint/state"
+	"github.com/badrootd/sei-tendermint/state/test/factory"
 	"os"
 	"runtime/debug"
 	"strings"
@@ -14,8 +16,6 @@ import (
 
 	"github.com/badrootd/sei-tendermint/config"
 	"github.com/badrootd/sei-tendermint/crypto"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/test/factory"
 	tmrand "github.com/badrootd/sei-tendermint/libs/rand"
 	tmtime "github.com/badrootd/sei-tendermint/libs/time"
 	"github.com/badrootd/sei-tendermint/types"
@@ -57,7 +57,7 @@ func makeStateAndBlockStore(dir string) (sm.State, *BlockStore, cleanupFunc, err
 	blockDB := dbm.NewMemDB()
 	state, err := sm.MakeGenesisStateFromFile(cfg.GenesisFile())
 	if err != nil {
-		return sm.State{}, nil, nil, fmt.Errorf("error constructing state from genesis file: %w", err)
+		return state.State{}, nil, nil, fmt.Errorf("error constructing state from genesis file: %w", err)
 	}
 	return state, NewBlockStore(blockDB), func() { os.RemoveAll(cfg.RootDir) }, nil
 }

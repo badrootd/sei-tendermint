@@ -4,6 +4,10 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	state2 "github.com/badrootd/sei-tendermint/state"
+	indexer2 "github.com/badrootd/sei-tendermint/state/indexer"
+	"github.com/badrootd/sei-tendermint/state/indexer/sink"
+	statesync2 "github.com/badrootd/sei-tendermint/statesync"
 	"github.com/badrootd/sei-tendermint/store"
 	"net"
 	"net/http"
@@ -30,10 +34,6 @@ import (
 	"github.com/badrootd/sei-tendermint/internal/p2p/pex"
 	"github.com/badrootd/sei-tendermint/internal/proxy"
 	rpccore "github.com/badrootd/sei-tendermint/internal/rpc/core"
-	sm "github.com/badrootd/sei-tendermint/internal/state"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer"
-	"github.com/badrootd/sei-tendermint/internal/state/indexer/sink"
-	"github.com/badrootd/sei-tendermint/internal/statesync"
 	"github.com/badrootd/sei-tendermint/libs/log"
 	"github.com/badrootd/sei-tendermint/libs/service"
 	tmtime "github.com/badrootd/sei-tendermint/libs/time"
@@ -66,12 +66,12 @@ type nodeImpl struct {
 	nodeKey          types.NodeKey // our node privkey
 
 	// services
-	eventSinks     []indexer.EventSink
-	initialState   sm.State
-	stateStore     sm.Store
+	eventSinks     []indexer2.EventSink
+	initialState   state2.State
+	stateStore     state2.Store
 	blockStore     *store.BlockStore // store the blockchain to disk
 	evPool         *evidence.Pool
-	indexerService *indexer.Service
+	indexerService *indexer2.Service
 	services       []service.Service
 	rpcListeners   []net.Listener // rpc servers
 	shutdownOps    closer
@@ -157,7 +157,7 @@ func makeNode(
 	}
 	closers = append(closers, dbCloser)
 
-	stateStore := sm.NewStore(stateDB)
+	stateStore := state2.NewStore(stateDB)
 
 	genDoc, err := genesisDocProvider()
 	if err != nil {
@@ -192,7 +192,7 @@ func makeNode(
 	if err != nil {
 		return nil, combineCloseError(err, makeCloser(closers))
 	}
-	indexerService := indexer.NewService(indexer.ServiceArgs{
+	indexerService := indexer2.NewService(indexer2.ServiceArgs{
 		Sinks:    eventSinks,
 		EventBus: eventBus,
 		Logger:   logger.With("module", "txindex"),
@@ -298,7 +298,7 @@ func makeNode(
 	node.services = append(node.services, mpReactor)
 
 	// make block executor for consensus and blockchain reactors to execute blocks
-	blockExec := sm.NewBlockExecutor(
+	blockExec := state2.NewBlockExecutor(
 		stateStore,
 		logger.With("module", "state"),
 		proxyApp,
@@ -398,7 +398,7 @@ func makeNode(
 		node.router.AddChDescToBeAdded(pex.ChannelDescriptor(), pxReactor.SetChannel)
 	}
 
-	postSyncHook := func(ctx context.Context, state sm.State) error {
+	postSyncHook := func(ctx context.Context, state state2.State) error {
 		csReactor.SetStateSyncingMetrics(0)
 
 		// TODO: Some form of orchestrator is needed here between the state
@@ -417,7 +417,7 @@ func makeNode(
 	// FIXME The way we do phased startups (e.g. replay -> block sync -> consensus) is very messy,
 	// we should clean this whole thing up. See:
 	// https://github.com/tendermint/tendermint/issues/4644
-	ssReactor := statesync.NewReactor(
+	ssReactor := statesync2.NewReactor(
 		genDoc.ChainID,
 		genDoc.InitialHeight,
 		*cfg.StateSync,
@@ -438,10 +438,10 @@ func makeNode(
 
 	node.shouldHandshake = !stateSync && !shoulddbsync
 	node.services = append(node.services, ssReactor)
-	node.router.AddChDescToBeAdded(statesync.GetSnapshotChannelDescriptor(), ssReactor.SetSnapshotChannel)
-	node.router.AddChDescToBeAdded(statesync.GetChunkChannelDescriptor(), ssReactor.SetChunkChannel)
-	node.router.AddChDescToBeAdded(statesync.GetLightBlockChannelDescriptor(), ssReactor.SetLightBlockChannel)
-	node.router.AddChDescToBeAdded(statesync.GetParamsChannelDescriptor(), ssReactor.SetParamsChannel)
+	node.router.AddChDescToBeAdded(statesync2.GetSnapshotChannelDescriptor(), ssReactor.SetSnapshotChannel)
+	node.router.AddChDescToBeAdded(statesync2.GetChunkChannelDescriptor(), ssReactor.SetChunkChannel)
+	node.router.AddChDescToBeAdded(statesync2.GetLightBlockChannelDescriptor(), ssReactor.SetLightBlockChannel)
+	node.router.AddChDescToBeAdded(statesync2.GetParamsChannelDescriptor(), ssReactor.SetParamsChannel)
 
 	dbsyncReactor := dbsync.NewReactor(
 		logger.With("module", "dbsync"),
@@ -454,7 +454,7 @@ func makeNode(
 		genDoc.ChainID,
 		eventBus,
 		shoulddbsync,
-		func(ctx context.Context, state sm.State) error {
+		func(ctx context.Context, state state2.State) error {
 			if _, err := client.LoadLatest(ctx, &abci.RequestLoadLatest{}); err != nil {
 				return err
 			}
@@ -729,12 +729,12 @@ func defaultGenesisDocProviderFunc(cfg *config.Config) genesisDocProvider {
 type NodeMetrics struct {
 	consensus *consensus.Metrics
 	eventlog  *eventlog.Metrics
-	indexer   *indexer.Metrics
+	indexer   *indexer2.Metrics
 	mempool   *mempool.Metrics
 	p2p       *p2p.Metrics
 	proxy     *proxy.Metrics
-	state     *sm.Metrics
-	statesync *statesync.Metrics
+	state     *state2.Metrics
+	statesync *statesync2.Metrics
 	evidence  *evidence.Metrics
 }
 
@@ -744,12 +744,12 @@ type metricsProvider func(chainID string) *NodeMetrics
 func NoOpMetricsProvider() *NodeMetrics {
 	return &NodeMetrics{
 		consensus: consensus.NopMetrics(),
-		indexer:   indexer.NopMetrics(),
+		indexer:   indexer2.NopMetrics(),
 		mempool:   mempool.NopMetrics(),
 		p2p:       p2p.NopMetrics(),
 		proxy:     proxy.NopMetrics(),
-		state:     sm.NopMetrics(),
-		statesync: statesync.NopMetrics(),
+		state:     state2.NopMetrics(),
+		statesync: statesync2.NopMetrics(),
 		evidence:  evidence.NopMetrics(),
 	}
 }
@@ -762,12 +762,12 @@ func DefaultMetricsProvider(cfg *config.InstrumentationConfig) metricsProvider {
 			return &NodeMetrics{
 				consensus: consensus.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
 				eventlog:  eventlog.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
-				indexer:   indexer.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
+				indexer:   indexer2.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
 				mempool:   mempool.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
 				p2p:       p2p.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
 				proxy:     proxy.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
-				state:     sm.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
-				statesync: statesync.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
+				state:     state2.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
+				statesync: statesync2.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
 				evidence:  evidence.PrometheusMetrics(cfg.Namespace, "chain_id", chainID),
 			}
 		}
@@ -780,25 +780,25 @@ func DefaultMetricsProvider(cfg *config.InstrumentationConfig) metricsProvider {
 // loadStateFromDBOrGenesisDocProvider attempts to load the state from the
 // database, or creates one using the given genesisDocProvider. On success this also
 // returns the genesis doc loaded through the given provider.
-func loadStateFromDBOrGenesisDocProvider(stateStore sm.Store, genDoc *types.GenesisDoc) (sm.State, error) {
+func loadStateFromDBOrGenesisDocProvider(stateStore state2.Store, genDoc *types.GenesisDoc) (state2.State, error) {
 
 	// 1. Attempt to load state form the database
 	state, err := stateStore.Load()
 	if err != nil {
-		return sm.State{}, err
+		return state2.State{}, err
 	}
 
 	if state.IsEmpty() {
 		// 2. If it's not there, derive it from the genesis doc
-		state, err = sm.MakeGenesisState(genDoc)
+		state, err = state2.MakeGenesisState(genDoc)
 		if err != nil {
-			return sm.State{}, err
+			return state2.State{}, err
 		}
 
 		// 3. save the gensis document to the state store so
 		// its fetchable by other callers.
 		if err := stateStore.Save(state); err != nil {
-			return sm.State{}, err
+			return state2.State{}, err
 		}
 	}
 

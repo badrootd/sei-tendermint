@@ -2,11 +2,11 @@ package commands
 
 import (
 	"fmt"
+	"github.com/badrootd/sei-tendermint/state"
 
 	"github.com/spf13/cobra"
 
 	"github.com/badrootd/sei-tendermint/config"
-	"github.com/badrootd/sei-tendermint/internal/state"
 )
 
 var removeBlock bool = false
