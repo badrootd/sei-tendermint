@@ -60,6 +60,61 @@ func (txi *TxIndex) Get(hash []byte) (*abci.TxResult, error) {
 	return txResult, nil
 }
 
+func (txi *TxIndex) AddBatch(b *indexer2.Batch) error {
+	storeBatch := txi.store.NewBatch()
+	defer storeBatch.Close()
+
+	for _, result := range b.Ops {
+		err := txi.indexResult(storeBatch, result)
+		if err != nil {
+			return err
+		}
+	}
+
+	return storeBatch.WriteSync()
+}
+
+func (txi *TxIndex) indexResult(batch dbm.Batch, result *abci.TxResult) error {
+	hash := types.Tx(result.Tx).Hash()
+
+	rawBytes, err := proto.Marshal(result)
+	if err != nil {
+		return err
+	}
+
+	if !result.Result.IsOK() {
+		oldResult, err := txi.Get(hash)
+		if err != nil {
+			return err
+		}
+
+		// if the new transaction failed and it's already indexed in an older block and was successful
+		// we skip it as we want users to get the older successful transaction when they query.
+		if oldResult != nil && oldResult.Result.Code == abci.CodeTypeOK {
+			return nil
+		}
+	}
+
+	// index tx by events
+	err = txi.indexEvents(result, hash, batch)
+	if err != nil {
+		return err
+	}
+
+	// index by height (always)
+	err = batch.Set(KeyFromHeight(result), hash)
+	if err != nil {
+		return err
+	}
+
+	// index by hash (always)
+	err = batch.Set(hash, rawBytes)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 // Index indexes transactions using the given list of events. Each key
 // that indexed from the tx's events is a composite of the event type and the
 // respective attribute's key delimited by a "." (eg. "account.number").
